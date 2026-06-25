@@ -69,11 +69,30 @@ h1, h2, h3 {
 }
 
 /* Metrics */
-[data-testid="stMetric"] {
-    background: rgba(34,197,94,0.08);
-    border-radius: 12px;
-    padding: 10px;
-    border: 1px solid rgba(34,197,94,0.25);
+def kpi_card(title, value, icon, color):
+    st.markdown(f"""
+    <div style="
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(34,197,94,0.2);
+        padding: 18px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        transition: 0.3s;
+    " onmouseover="this.style.transform='scale(1.05)'"
+      onmouseout="this.style.transform='scale(1)'">
+
+        <div style="font-size:28px;">{icon}</div>
+
+        <h3 style="color:{color}; margin:5px 0;">
+            {value}
+        </h3>
+
+        <p style="color:#A7F3D0; margin:0; font-size:13px;">
+            {title}
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 }
 
 </style>
