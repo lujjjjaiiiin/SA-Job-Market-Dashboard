@@ -212,15 +212,21 @@ col1, col2 = st.columns(2)
 with col1:
     salary_comp = df.groupby("is_tech_job")["Salary"].mean()
 
-    fig, ax = plt.subplots()
-    fig.patch.set_alpha(0)
-    ax.set_facecolor("none")
+labels_map = {0: "Non-Tech", 1: "Tech"}
 
-    salary_comp.plot(kind="bar", ax=ax, color=["#EF4444", "#22C55E"])
+fig, ax = plt.subplots()
+fig.patch.set_alpha(0)
+ax.set_facecolor("none")
 
-    ax.set_xticklabels(["Non-Tech", "Tech"], color="white")
+salary_comp.plot(kind="bar", ax=ax, color=["#EF4444", "#22C55E"])
 
-    st.pyplot(fig)
+ax.set_xticklabels(
+    [labels_map[i] for i in salary_comp.index],
+    rotation=0,
+    color="white"
+)
+
+st.pyplot(fig)
 
 with col2:
     counts = df["is_tech_job"].value_counts()
