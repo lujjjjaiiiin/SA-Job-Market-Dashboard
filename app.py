@@ -43,19 +43,32 @@ df["is_tech_job"] = (
 )
 
 # =========================
-# CSS (CLEAN + GREEN THEME)
+# STYLE (GREEN SAUDI THEME)
 # =========================
 st.markdown("""
 <style>
 
+/* Background */
 .main {
     background: linear-gradient(180deg,#0B1220,#0F172A);
 }
 
+/* Headings */
 h1, h2, h3 {
     color: #22C55E;
 }
 
+/* Sidebar 💚 */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg,#052e16,#14532D);
+    border-right: 2px solid #22C55E;
+}
+
+[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+/* Metrics */
 [data-testid="stMetric"] {
     background: rgba(34,197,94,0.08);
     border-radius: 12px;
@@ -67,7 +80,7 @@ h1, h2, h3 {
 """, unsafe_allow_html=True)
 
 # =========================
-# HEADER
+# HEADER 🇸🇦
 # =========================
 st.markdown("""
 <div style="
@@ -90,7 +103,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # =========================
-# FILTERS
+# SIDEBAR FILTERS
 # =========================
 st.sidebar.header("🔎 Filters")
 
@@ -120,9 +133,9 @@ if df.empty:
 # =========================
 col1, col2, col3 = st.columns(3)
 
-col1.metric("Total Jobs", len(df))
-col2.metric("Tech Jobs", df["is_tech_job"].sum())
-col3.metric("Tech %", f"{df['is_tech_job'].mean()*100:.1f}%")
+col1.metric("📌 Total Jobs", len(df))
+col2.metric("💻 Tech Jobs", df["is_tech_job"].sum())
+col3.metric("📊 Tech %", f"{df['is_tech_job'].mean()*100:.1f}%")
 
 st.divider()
 
@@ -132,7 +145,7 @@ st.divider()
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Top Job Titles")
+    st.subheader("🏆 Top Job Titles")
     top_jobs = df["job_title"].value_counts().head(10)
 
     fig, ax = plt.subplots()
@@ -140,13 +153,12 @@ with col1:
     ax.set_facecolor("none")
 
     top_jobs.sort_values().plot(kind="barh", ax=ax, color="#22C55E")
-
     ax.tick_params(colors="white")
 
     st.pyplot(fig)
 
 with col2:
-    st.subheader("Top Cities")
+    st.subheader("📍 Top Cities")
     top_cities = df["city"].value_counts().head(10)
 
     fig, ax = plt.subplots()
@@ -154,7 +166,6 @@ with col2:
     ax.set_facecolor("none")
 
     top_cities.sort_values().plot(kind="barh", ax=ax, color="#16A34A")
-
     ax.tick_params(colors="white")
 
     st.pyplot(fig)
@@ -167,7 +178,7 @@ st.divider()
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Contract Type")
+    st.subheader("📄 Contract Type")
 
     contract = df["contract"].value_counts()
 
@@ -186,7 +197,7 @@ with col1:
     st.pyplot(fig)
 
 with col2:
-    st.subheader("Salary Distribution")
+    st.subheader("💰 Salary Distribution")
 
     salary = df["Salary"].dropna()
 
@@ -203,14 +214,11 @@ with col2:
 st.divider()
 
 # =========================
-# TECH ANALYSIS (FIXED)
+# TECH SECTION (ONE CHART ONLY 💚)
 # =========================
-st.subheader("Tech vs Non-Tech")
+st.subheader("💻 Tech vs Non-Tech (Average Salary)")
 
-col1, col2 = st.columns(2)
-
-with col1:
-    salary_comp = df.groupby("is_tech_job")["Salary"].mean()
+salary_comp = df.groupby("is_tech_job")["Salary"].mean()
 
 labels_map = {0: "Non-Tech", 1: "Tech"}
 
@@ -226,38 +234,21 @@ ax.set_xticklabels(
     color="white"
 )
 
+ax.tick_params(colors="white")
+
 st.pyplot(fig)
 
-with col2:
-    counts = df["is_tech_job"].value_counts()
-
-    labels = ["Non-Tech" if i == 0 else "Tech" for i in counts.index]
-
-    fig, ax = plt.subplots()
-    fig.patch.set_alpha(0)
-    ax.set_facecolor("none")
-
-    ax.pie(
-        counts.values,
-        labels=labels,
-        autopct="%1.1f%%",
-        colors=["#EF4444", "#22C55E"][:len(counts)],
-        textprops={"color": "white"}
-    )
-
-    st.pyplot(fig)
-
 # =========================
-# TABLE
+# DATA
 # =========================
-st.subheader("Data Preview")
+st.subheader("📋 Data Preview")
 st.dataframe(df, use_container_width=True)
 
 # =========================
 # DOWNLOAD
 # =========================
 st.download_button(
-    "Download CSV",
+    "📥 Download Data",
     df.to_csv(index=False),
     "Jadarat_filtered.csv",
     "text/csv"
