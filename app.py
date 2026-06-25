@@ -118,6 +118,14 @@ if df.empty:
     st.warning("No data for selected filters")
     st.stop()
 
+job_search = st.sidebar.text_input("🔍 Search Job Title")
+
+if job_search:
+    df = df[
+        df["job_title"]
+        .str.contains(job_search, case=False, na=False)
+    ]
+
 # =========================
 # KPI METRICS
 # =========================
