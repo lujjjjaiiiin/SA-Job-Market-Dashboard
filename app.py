@@ -147,10 +147,9 @@ def fmt(x):
 # =========================
 c1, c2, c3, c4 = st.columns(4)
 
-c1.metric("📌 Jobs", fmt(len(df)))
-c2.metric("🏢 Companies", fmt(df["comp_name"].nunique()) if "comp_name" in df else "N/A")
-c3.metric("💻 Tech Jobs", fmt(df["is_tech_job"].sum()))
-c3.metric("📊 Tech %", f"{df['is_tech_job'].mean()*100:.1f}%")
+c1.metric("Jobs", fmt(len(df)))
+c2.metric("Companies", fmt(df["comp_name"].nunique()) if "comp_name" in df else "N/A")
+c3.metric("Tech Jobs", fmt(df["is_tech_job"].sum()))
 
 st.divider()
 
