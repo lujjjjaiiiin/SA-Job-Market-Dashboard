@@ -283,6 +283,7 @@ st.plotly_chart(fig, use_container_width=True)
 # =========================
 # DATA PREVIEW
 # =========================
+st.caption(f"Showing {len(df):,} job postings")
 st.subheader("Data Preview")
 st.dataframe(df, use_container_width=True)
 
