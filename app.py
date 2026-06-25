@@ -48,23 +48,23 @@ h1, h2, h3 {
 st.markdown("""
 <div style="
     background: linear-gradient(135deg,#0B1220,#14532D);
-    padding: 25px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    padding:20px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.4);
 ">
 
     <img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg"
-         width="55">
+         width="60">
 
     <div>
         <h1 style="color:#22C55E; margin:0;">
             Saudi Arabia Job Market Dashboard
         </h1>
         <p style="color:#A7F3D0; margin:0;">
-            🇸🇦 Jadarat Dataset • Vision 2030 • Data Analytics Project
+            🇸🇦 Vision 2030 • Data Analytics • Jadarat Dataset
         </p>
     </div>
 
