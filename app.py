@@ -145,23 +145,23 @@ def kpi_card(title, value, icon, color):
     st.markdown(
         f"""
         <div style="
-            background: rgba(34,197,94,0.08);
+            background: rgba(34,197,94,0.10);
             border: 1px solid rgba(34,197,94,0.25);
-            padding: 18px;
-            border-radius: 18px;
+            padding: 16px;
+            border-radius: 16px;
             text-align: center;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
         ">
 
-            <div style="font-size:32px; margin-bottom:6px;">
+            <div style="font-size:32px; line-height:1;">
                 {icon}
             </div>
 
             <div style="
                 color:{color};
-                font-size:26px;
+                font-size:24px;
                 font-weight:700;
-                margin-bottom:4px;
+                margin-top:6px;
             ">
                 {value}
             </div>
@@ -169,6 +169,7 @@ def kpi_card(title, value, icon, color):
             <div style="
                 color:#A7F3D0;
                 font-size:13px;
+                margin-top:4px;
             ">
                 {title}
             </div>
@@ -184,15 +185,13 @@ def kpi_card(title, value, icon, color):
 c1, c2, c3 = st.columns(3)
 
 with c1:
-    kpi_card("Total Jobs", fmt(len(df)), "📊", "#22C55E")
+    kpi_card("Total Jobs", len(df), "📊", "#22C55E")
 
 with c2:
-    comp = df["comp_name"].nunique() if "comp_name" in df.columns else 0
-    kpi_card("Companies", fmt(comp), "🏢", "#60A5FA")
+    kpi_card("Companies", df["comp_name"].nunique(), "🏢", "#60A5FA")
 
 with c3:
-    tech = df["is_tech_job"].sum()
-    kpi_card("Tech Jobs", fmt(tech), "💻", "#FACC15")
+    kpi_card("Tech Jobs", df["is_tech_job"].sum(), "💻", "#FACC15")
 
 st.divider()
 
