@@ -43,22 +43,20 @@ df["is_tech_job"] = (
 )
 
 # =========================
-# STYLE (GREEN SAUDI THEME)
+# STYLE
 # =========================
 st.markdown("""
 <style>
 
-/* Background */
 .main {
     background: linear-gradient(180deg,#0B1220,#0F172A);
 }
 
-/* Headings */
 h1, h2, h3 {
     color: #22C55E;
 }
 
-/* Sidebar 💚 */
+/* Sidebar */
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg,#052e16,#14532D);
     border-right: 2px solid #22C55E;
@@ -68,39 +66,11 @@ h1, h2, h3 {
     color: white !important;
 }
 
-/* Metrics */
-
-}
-
 </style>
 """, unsafe_allow_html=True)
 
-def kpi_card(title, value, icon, color):
-    st.markdown(f"""
-    <div style="
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(34,197,94,0.2);
-        padding: 18px;
-        border-radius: 16px;
-        text-align: center;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        transition: 0.3s;
-    " onmouseover="this.style.transform='scale(1.05)'"
-      onmouseout="this.style.transform='scale(1)'">
-
-        <div style="font-size:28px;">{icon}</div>
-
-        <h3 style="color:{color}; margin:5px 0;">
-            {value}
-        </h3>
-
-        <p style="color:#A7F3D0; margin:0; font-size:13px;">
-            {title}
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
 # =========================
-# HEADER 🇸🇦
+# HEADER
 # =========================
 st.markdown("""
 <div style="
@@ -121,8 +91,9 @@ st.markdown("""
 
 </div>
 """, unsafe_allow_html=True)
+
 # =========================
-# SIDEBAR
+# SIDEBAR FILTERS
 # =========================
 st.sidebar.header("🔎 Filters")
 
@@ -153,9 +124,14 @@ if df.empty:
     st.stop()
 
 # =========================
-# SAFE KPI FORMAT
+# FORMAT NUMBERS
 # =========================
 def fmt(x):
+    try:
+        x = float(x)
+    except:
+        return "0"
+
     if x >= 1_000_000:
         return f"{x/1_000_000:.1f}M"
     if x >= 1_000:
@@ -163,27 +139,27 @@ def fmt(x):
     return str(int(x))
 
 # =========================
-# KPI ROW
+# KPI CARD (FINAL)
 # =========================
-
 def kpi_card(title, value, icon, color):
     st.markdown(f"""
     <div style="
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(34,197,94,0.2);
+        background: linear-gradient(145deg, rgba(34,197,94,0.10), rgba(15,23,42,0.9));
+        border: 1px solid rgba(34,197,94,0.25);
         padding: 18px;
-        border-radius: 16px;
+        border-radius: 18px;
         text-align: center;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-        transition: 0.3s;
-    " onmouseover="this.style.transform='scale(1.05)'"
-      onmouseout="this.style.transform='scale(1)'">
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        transition: all 0.3s ease-in-out;
+    "
+    onmouseover="this.style.transform='scale(1.07)';"
+    onmouseout="this.style.transform='scale(1)';">
 
-        <div style="font-size:28px;">{icon}</div>
+        <div style="font-size:30px;">{icon}</div>
 
-        <h3 style="color:{color}; margin:5px 0;">
+        <h2 style="color:{color}; margin:8px 0; font-size:22px;">
             {value}
-        </h3>
+        </h2>
 
         <p style="color:#A7F3D0; margin:0; font-size:13px;">
             {title}
@@ -191,24 +167,30 @@ def kpi_card(title, value, icon, color):
     </div>
     """, unsafe_allow_html=True)
 
+# =========================
+# KPI ROW
+# =========================
 c1, c2, c3 = st.columns(3)
 
 with c1:
-    kpi_card("Total Jobs", f"{len(df):,}", "📊", "#22C55E")
+    kpi_card("Total Jobs", fmt(len(df)), "📊", "#22C55E")
 
 with c2:
-    kpi_card("Companies", f"{df['comp_name'].nunique():,}", "🏢", "#60A5FA")
+    comp = df["comp_name"].nunique() if "comp_name" in df.columns else 0
+    kpi_card("Companies", fmt(comp), "🏢", "#60A5FA")
 
 with c3:
-    kpi_card("Tech Jobs", f"{df['is_tech_job'].sum():,}", "💻", "#FACC15")
+    tech = df["is_tech_job"].sum()
+    kpi_card("Tech Jobs", fmt(tech), "💻", "#FACC15")
+
+st.divider()
 
 # =========================
-# INSIGHTS (SAFE)
+# INSIGHTS
 # =========================
-st.subheader("📈 Key Insights")
-
 top_city = df["city"].value_counts().idxmax() if "city" in df else "N/A"
 top_job = df["job_title"].value_counts().idxmax()
+
 avg_salary = df["Salary"].mean() if "Salary" in df else 0
 
 a, b, c = st.columns(3)
@@ -220,7 +202,7 @@ c.warning(f"💰 Avg Salary: {avg_salary:,.0f} SAR")
 st.divider()
 
 # =========================
-# TOP JOBS & CITIES (PLOTLY)
+# CHARTS
 # =========================
 col1, col2 = st.columns(2)
 
@@ -253,7 +235,6 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Contract Type")
-
     contract = df["contract"].value_counts().reset_index()
     contract.columns = ["type", "count"]
 
@@ -271,7 +252,7 @@ with col2:
 st.divider()
 
 # =========================
-# TECH ANALYSIS
+# TECH
 # =========================
 st.subheader("Tech vs Non-Tech")
 
@@ -287,7 +268,6 @@ st.plotly_chart(fig, use_container_width=True)
 # =========================
 # DATA
 # =========================
-st.caption(f"Rows: {len(df):,}")
 st.dataframe(df, use_container_width=True)
 
 # =========================
