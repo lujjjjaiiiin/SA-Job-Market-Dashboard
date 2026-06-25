@@ -170,18 +170,19 @@ def kpi_card(title, value, icon, color):
 # =========================
 # KPI ROW
 # =========================
+# SAFE KPI SECTION
+df["is_tech_job"] = pd.to_numeric(df["is_tech_job"], errors="coerce").fillna(0)
+
+total_jobs = len(df)
+tech_jobs = df["is_tech_job"].sum()
+tech_pct = (tech_jobs / total_jobs * 100) if total_jobs > 0 else 0
+comp = df["comp_name"].nunique() if "comp_name" in df.columns else 0
+
 c1, c2, c3 = st.columns(3)
 
-with c1:
-    kpi_card("Total Jobs", fmt(len(df)), "📊", "#22C55E")
-
-with c2:
-    comp = df["comp_name"].nunique() if "comp_name" in df.columns else 0
-    kpi_card("Companies", fmt(comp), "🏢", "#60A5FA")
-
-with c3:
-    tech = df["is_tech_job"].sum()
-    kpi_card("Tech Jobs", fmt(tech), "💻", "#FACC15")
+c1.metric("📊 Total Jobs", f"{total_jobs:,}")
+c2.metric("🏢 Companies", f"{comp:,}")
+c3.metric("💻 Tech Jobs", f"{int(tech_jobs):,}")
 
 st.divider()
 
