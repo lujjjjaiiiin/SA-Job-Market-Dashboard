@@ -43,14 +43,16 @@ df = load_data()
 # =========================
 # FEATURE ENGINEERING
 # =========================
+df.columns = df.columns.str.strip()
+
+df["job_title"] = df["job_title"].astype(str)
+
 TECH_PATTERN = r'data scientist|data analyst|software|developer|ai|machine learning|python|java|sql'
 
-df["is_tech_job"] = (
-    df["job_title"]
-    .str.lower()
-    .str.contains(TECH_PATTERN, na=False)
-    .astype(int)
-)
+df["is_tech_job"] = df["job_title"].str.lower().str.contains(
+    TECH_PATTERN,
+    na=False
+).astype(int)
 
 # =========================
 # SIDEBAR FILTERS
