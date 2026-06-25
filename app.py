@@ -572,7 +572,6 @@ print(
 
 df.to_csv("Jadarat.csv", index=False)
 
-from google.colab import files
 
 files.download("Jadarat.csv")
 files.download("requirements.txt")
