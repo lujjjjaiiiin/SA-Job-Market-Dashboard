@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 st.set_page_config(
     page_title="Saudi Job Market Dashboard",
     layout="wide",
-    page_icon="📊"
+    page_icon="SA"
 )
 
 # =========================
@@ -25,7 +25,7 @@ st.markdown("""
 # =========================
 # TITLE
 # =========================
-st.title("📊 Saudi Arabia Job Market Dashboard")
+st.title("Saudi Arabia Job Market Dashboard")
 st.caption("Jadarat Dataset Analysis — Clean & Interactive Dashboard")
 
 # =========================
@@ -99,9 +99,9 @@ elif tech_filter == "Non-Tech Only":
 # =========================
 col1, col2, col3 = st.columns(3)
 
-col1.metric("📌 Total Jobs", f"{len(df):,}")
-col2.metric("💻 Tech Jobs", f"{df['is_tech_job'].sum():,}")
-col3.metric("📊 Tech %", f"{df['is_tech_job'].mean()*100:.1f}%")
+col1.metric("Total Jobs", f"{len(df):,}")
+col2.metric("Tech Jobs", f"{df['is_tech_job'].sum():,}")
+col3.metric("Tech %", f"{df['is_tech_job'].mean()*100:.1f}%")
 
 st.divider()
 
@@ -111,7 +111,7 @@ st.divider()
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("🏆 Top Job Titles")
+    st.subheader(" Top Job Titles")
     if "job_title" in df.columns:
         top_jobs = df["job_title"].value_counts().head(10)
 
@@ -123,7 +123,7 @@ with col1:
         st.pyplot(fig)
 
 with col2:
-    st.subheader("📍 Top Hiring Cities")
+    st.subheader("Top Hiring Cities")
     if "city" in df.columns:
         top_cities = df["city"].value_counts().head(10)
 
@@ -142,7 +142,7 @@ st.divider()
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("📄 Contract Type")
+    st.subheader("Contract Type")
     if "contract" in df.columns:
         contract = df["contract"].value_counts()
 
@@ -153,7 +153,7 @@ with col1:
         st.pyplot(fig)
 
 with col2:
-    st.subheader("💰 Salary Distribution")
+    st.subheader("Salary Distribution")
     if "Salary" in df.columns:
         salary = df["Salary"].dropna()
 
@@ -168,12 +168,12 @@ st.divider()
 # =========================
 # TECH ANALYSIS
 # =========================
-st.subheader("💻 Tech vs Non-Tech Analysis")
+st.subheader("Tech vs Non-Tech Analysis")
 
 col1, col2 = st.columns(2)
 
 with col1:
-    salary_comp = df.groupby("is_tech_job")["Salary"].mean()
+     salary_comp = df.groupby("is_tech_job")["Salary"].mean()
 
     fig, ax = plt.subplots()
     salary_comp.plot(kind="bar", ax=ax, color=["#E74C3C", "#2E86C1"])
@@ -196,7 +196,7 @@ with col2:
 # =========================
 # DATA TABLE
 # =========================
-st.subheader("📋 Data Preview")
+st.subheader("Data Preview")
 st.dataframe(df, use_container_width=True)
 
 # =========================
