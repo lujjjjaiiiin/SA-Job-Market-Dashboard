@@ -9,39 +9,67 @@ import matplotlib.pyplot as plt
 st.set_page_config(
     page_title="Saudi Job Market Dashboard",
     layout="wide",
-    page_icon="📊"
+    page_icon="🇸🇦"
 )
 
 # =========================
-# STYLE (DARK + CLEAN UI)
+# CSS DESIGN (GREEN SAUDI THEME)
 # =========================
 st.markdown("""
-    <style>
-        .main {
-            background-color: #0E1117;
-        }
+<style>
 
-        h1, h2, h3 {
-            color: #FFFFFF;
-        }
+.main {
+    background: linear-gradient(180deg,#0B1220,#0F172A);
+    color: white;
+}
 
-        .stMetric {
-            background-color: rgba(255,255,255,0.05);
-            padding: 10px;
-            border-radius: 10px;
-        }
+h1, h2, h3 {
+    color: #22C55E;
+}
 
-        section[data-testid="stSidebar"] {
-            background-color: #111827;
-        }
-    </style>
+.stMetric {
+    background: rgba(34,197,94,0.08);
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid rgba(34,197,94,0.2);
+}
+
+[data-testid="stSidebar"] {
+    background: #0B1220;
+    border-right: 1px solid rgba(34,197,94,0.2);
+}
+
+</style>
 """, unsafe_allow_html=True)
 
 # =========================
-# TITLE
+# HEADER (SAUDI IDENTITY)
 # =========================
-st.title("📊 Saudi Arabia Job Market Dashboard")
-st.caption("Jadarat Dataset Analysis — Clean & Professional View")
+st.markdown("""
+<div style="
+    background: linear-gradient(135deg,#0B1220,#14532D);
+    padding: 25px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+">
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg"
+         width="55">
+
+    <div>
+        <h1 style="color:#22C55E; margin:0;">
+            Saudi Arabia Job Market Dashboard
+        </h1>
+        <p style="color:#A7F3D0; margin:0;">
+            🇸🇦 Jadarat Dataset • Vision 2030 • Data Analytics Project
+        </p>
+    </div>
+
+</div>
+""", unsafe_allow_html=True)
 
 # =========================
 # LOAD DATA
@@ -60,7 +88,7 @@ if df.empty:
     st.stop()
 
 # =========================
-# TECH FEATURE
+# FEATURE ENGINEERING
 # =========================
 df["job_title"] = df["job_title"].astype(str)
 
@@ -100,7 +128,7 @@ if df.empty:
     st.stop()
 
 # =========================
-# KPI SECTION
+# KPIs
 # =========================
 col1, col2, col3 = st.columns(3)
 
@@ -119,41 +147,41 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader("🏆 Top Job Titles")
 
-    if "job_title" in df.columns:
-        top_jobs = df["job_title"].value_counts().head(10)
+    top_jobs = df["job_title"].value_counts().head(10)
 
-        fig, ax = plt.subplots()
-        fig.patch.set_alpha(0)
-        ax.set_facecolor("none")
+    fig, ax = plt.subplots()
+    fig.patch.set_alpha(0)
+    ax.set_facecolor("none")
 
-        top_jobs.sort_values().plot(kind="barh", ax=ax, color="#00C2FF")
-        ax.set_title("Top 10 Job Titles", color="white")
-        ax.tick_params(colors="white")
+    top_jobs.sort_values().plot(kind="barh", ax=ax, color="#22C55E")
 
-        for spine in ax.spines.values():
-            spine.set_color("white")
+    ax.set_title("Top Job Titles", color="white")
+    ax.tick_params(colors="white")
 
-        st.pyplot(fig)
+    for spine in ax.spines.values():
+        spine.set_color("#22C55E")
+
+    st.pyplot(fig)
 
 # TOP CITIES
 with col2:
-    st.subheader("📍 Top Hiring Cities")
+    st.subheader("📍 Top Cities")
 
-    if "city" in df.columns:
-        top_cities = df["city"].value_counts().head(10)
+    top_cities = df["city"].value_counts().head(10)
 
-        fig, ax = plt.subplots()
-        fig.patch.set_alpha(0)
-        ax.set_facecolor("none")
+    fig, ax = plt.subplots()
+    fig.patch.set_alpha(0)
+    ax.set_facecolor("none")
 
-        top_cities.sort_values().plot(kind="barh", ax=ax, color="#FFA500")
-        ax.set_title("Top 10 Cities", color="white")
-        ax.tick_params(colors="white")
+    top_cities.sort_values().plot(kind="barh", ax=ax, color="#16A34A")
 
-        for spine in ax.spines.values():
-            spine.set_color("white")
+    ax.set_title("Top Cities", color="white")
+    ax.tick_params(colors="white")
 
-        st.pyplot(fig)
+    for spine in ax.spines.values():
+        spine.set_color("#22C55E")
+
+    st.pyplot(fig)
 
 st.divider()
 
@@ -166,44 +194,39 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader("📄 Contract Type")
 
-    if "contract" in df.columns:
-        contract = df["contract"].value_counts()
+    contract = df["contract"].value_counts()
 
-        fig, ax = plt.subplots()
-        fig.patch.set_alpha(0)
-        ax.set_facecolor("none")
+    fig, ax = plt.subplots()
+    fig.patch.set_alpha(0)
+    ax.set_facecolor("none")
 
-        ax.pie(
-            contract,
-            labels=contract.index,
-            autopct="%1.1f%%",
-            textprops={"color": "white"}
-        )
+    ax.pie(
+        contract,
+        labels=contract.index,
+        autopct="%1.1f%%",
+        textprops={"color": "#22C55E"}
+    )
 
-        ax.set_title("Contract Distribution", color="white")
+    ax.set_title("Contract Distribution", color="#22C55E")
 
-        st.pyplot(fig)
+    st.pyplot(fig)
 
 # SALARY
 with col2:
     st.subheader("💰 Salary Distribution")
 
-    if "Salary" in df.columns:
-        salary = df["Salary"].dropna()
+    salary = df["Salary"].dropna()
 
-        fig, ax = plt.subplots()
-        fig.patch.set_alpha(0)
-        ax.set_facecolor("none")
+    fig, ax = plt.subplots()
+    fig.patch.set_alpha(0)
+    ax.set_facecolor("none")
 
-        ax.hist(salary, bins=25, color="#00FF99", edgecolor="white")
+    ax.hist(salary, bins=25, color="#22C55E", edgecolor="white")
 
-        ax.set_title("Salary Distribution", color="white")
-        ax.tick_params(colors="white")
+    ax.set_title("Salary Distribution", color="#22C55E")
+    ax.tick_params(colors="white")
 
-        for spine in ax.spines.values():
-            spine.set_color("white")
-
-        st.pyplot(fig)
+    st.pyplot(fig)
 
 st.divider()
 
@@ -222,17 +245,13 @@ with col1:
     fig.patch.set_alpha(0)
     ax.set_facecolor("none")
 
-    salary_comp.plot(kind="bar", ax=ax, color=["#FF4B4B", "#00C2FF"])
+    salary_comp.plot(kind="bar", ax=ax, color=["#EF4444", "#22C55E"])
 
-    ax.set_title("Average Salary Comparison", color="white")
-    ax.tick_params(colors="white")
+    ax.set_title("Average Salary", color="#22C55E")
 
     labels = ["Non-Tech", "Tech"]
     ax.set_xticks(range(len(salary_comp)))
-    ax.set_xticklabels([labels[i] for i in salary_comp.index], rotation=0, color="white")
-
-    for spine in ax.spines.values():
-        spine.set_color("white")
+    ax.set_xticklabels([labels[i] for i in salary_comp.index], color="white")
 
     st.pyplot(fig)
 
@@ -244,17 +263,15 @@ with col2:
     fig.patch.set_alpha(0)
     ax.set_facecolor("none")
 
-    labels = ["Non-Tech", "Tech"][:len(counts)]
-
     ax.pie(
         counts,
-        labels=labels,
+        labels=["Non-Tech", "Tech"][:len(counts)],
         autopct="%1.1f%%",
-        colors=["#FF4B4B", "#00C2FF"][:len(counts)],
+        colors=["#EF4444", "#22C55E"],
         textprops={"color": "white"}
     )
 
-    ax.set_title("Job Type Share", color="white")
+    ax.set_title("Job Share", color="#22C55E")
 
     st.pyplot(fig)
 
