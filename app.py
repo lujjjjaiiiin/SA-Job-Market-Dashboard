@@ -57,25 +57,13 @@ df["is_tech_job"] = (
 # =========================
 st.sidebar.header("🔎 Filters")
 
-def multiselect_filter(column, label):
-    if column in df.columns:
-        options = st.sidebar.multiselect(label, df[column].dropna().unique())
-        if options:
-            return df[df[column].isin(options)]
-    return df
-
-df = multiselect_filter("city", "City")
-df = multiselect_filter("contract", "Contract Type")
-
-st.sidebar.header("🔎 Filters")
-
 # -----------------------
 # CITY FILTER
 # -----------------------
 if "city" in df.columns:
     cities = st.sidebar.multiselect(
         "City",
-        df["city"].dropna().unique()
+        sorted(df["city"].dropna().unique())
     )
     if cities:
         df = df[df["city"].isin(cities)]
@@ -86,13 +74,13 @@ if "city" in df.columns:
 if "contract" in df.columns:
     contracts = st.sidebar.multiselect(
         "Contract Type",
-        df["contract"].dropna().unique()
+        sorted(df["contract"].dropna().unique())
     )
     if contracts:
         df = df[df["contract"].isin(contracts)]
 
 # -----------------------
-# TECH / NON-TECH FILTER ⭐
+# TECH / NON-TECH FILTER
 # -----------------------
 tech_filter = st.sidebar.radio(
     "Job Type",
@@ -104,7 +92,6 @@ if tech_filter == "Tech Only":
 
 elif tech_filter == "Non-Tech Only":
     df = df[df["is_tech_job"] == 0]
-
 # =========================
 # KPI SECTION
 # =========================
