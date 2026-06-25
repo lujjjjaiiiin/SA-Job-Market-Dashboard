@@ -1,3 +1,7 @@
 
 streamlit
-pands
+pandas
+numpy
+matplotlib
+seaborn
+kagglehub
