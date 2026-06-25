@@ -69,6 +69,12 @@ h1, h2, h3 {
 }
 
 /* Metrics */
+
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 def kpi_card(title, value, icon, color):
     st.markdown(f"""
     <div style="
@@ -93,11 +99,6 @@ def kpi_card(title, value, icon, color):
         </p>
     </div>
     """, unsafe_allow_html=True)
-}
-
-</style>
-""", unsafe_allow_html=True)
-
 # =========================
 # HEADER 🇸🇦
 # =========================
