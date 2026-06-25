@@ -29,66 +29,6 @@ if df.empty:
     st.stop()
 
 # =========================
-# CSS DESIGN (GREEN SAUDI THEME)
-# =========================
-st.markdown("""
-<style>
-
-.main {
-    background: linear-gradient(180deg,#0B1220,#0F172A);
-    color: white;
-}
-
-h1, h2, h3 {
-    color: #22C55E;
-}
-
-.stMetric {
-    background: rgba(34,197,94,0.08);
-    border-radius: 12px;
-    padding: 12px;
-    border: 1px solid rgba(34,197,94,0.2);
-}
-
-[data-testid="stSidebar"] {
-    background: #0B1220;
-    border-right: 1px solid rgba(34,197,94,0.2);
-}
-
-</style>
-""", unsafe_allow_html=True)
-
-# =========================
-# HEADER (SAUDI IDENTITY)
-# =========================
-st.markdown("""
-<div style="
-    background: linear-gradient(135deg,#0B1220,#14532D);
-    padding:20px;
-    border-radius:15px;
-    display:flex;
-    align-items:center;
-    gap:15px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.4);
-">
-
-    <img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg"
-         width="60">
-
-    <div>
-        <h1 style="color:#22C55E; margin:0;">
-            Saudi Arabia Job Market Dashboard
-        </h1>
-        <p style="color:#A7F3D0; margin:0;">
-            🇸🇦 Vision 2030 • Data Analytics • Jadarat Dataset
-        </p>
-    </div>
-
-</div>
-""", unsafe_allow_html=True)
-
-
-# =========================
 # FEATURE ENGINEERING
 # =========================
 df["job_title"] = df["job_title"].astype(str)
@@ -103,7 +43,54 @@ df["is_tech_job"] = (
 )
 
 # =========================
-# SIDEBAR FILTERS
+# CSS (CLEAN + GREEN THEME)
+# =========================
+st.markdown("""
+<style>
+
+.main {
+    background: linear-gradient(180deg,#0B1220,#0F172A);
+}
+
+h1, h2, h3 {
+    color: #22C55E;
+}
+
+[data-testid="stMetric"] {
+    background: rgba(34,197,94,0.08);
+    border-radius: 12px;
+    padding: 10px;
+    border: 1px solid rgba(34,197,94,0.25);
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# =========================
+# HEADER
+# =========================
+st.markdown("""
+<div style="
+    background: linear-gradient(135deg,#0B1220,#14532D);
+    padding:20px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+">
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" width="60">
+
+<div>
+<h1 style="color:#22C55E;margin:0;">Saudi Arabia Job Market Dashboard</h1>
+<p style="color:#A7F3D0;margin:0;">🇸🇦 Vision 2030 • Jadarat Dataset</p>
+</div>
+
+</div>
+""", unsafe_allow_html=True)
+
+# =========================
+# FILTERS
 # =========================
 st.sidebar.header("🔎 Filters")
 
@@ -133,9 +120,9 @@ if df.empty:
 # =========================
 col1, col2, col3 = st.columns(3)
 
-col1.metric("📌 Total Jobs", f"{len(df):,}")
-col2.metric("💻 Tech Jobs", f"{df['is_tech_job'].sum():,}")
-col3.metric("📊 Tech %", f"{df['is_tech_job'].mean()*100:.1f}%")
+col1.metric("Total Jobs", len(df))
+col2.metric("Tech Jobs", df["is_tech_job"].sum())
+col3.metric("Tech %", f"{df['is_tech_job'].mean()*100:.1f}%")
 
 st.divider()
 
@@ -144,10 +131,8 @@ st.divider()
 # =========================
 col1, col2 = st.columns(2)
 
-# TOP JOBS
 with col1:
-    st.subheader("🏆 Top Job Titles")
-
+    st.subheader("Top Job Titles")
     top_jobs = df["job_title"].value_counts().head(10)
 
     fig, ax = plt.subplots()
@@ -156,18 +141,12 @@ with col1:
 
     top_jobs.sort_values().plot(kind="barh", ax=ax, color="#22C55E")
 
-    ax.set_title("Top Job Titles", color="white")
     ax.tick_params(colors="white")
-
-    for spine in ax.spines.values():
-        spine.set_color("#22C55E")
 
     st.pyplot(fig)
 
-# TOP CITIES
 with col2:
-    st.subheader("📍 Top Cities")
-
+    st.subheader("Top Cities")
     top_cities = df["city"].value_counts().head(10)
 
     fig, ax = plt.subplots()
@@ -176,11 +155,7 @@ with col2:
 
     top_cities.sort_values().plot(kind="barh", ax=ax, color="#16A34A")
 
-    ax.set_title("Top Cities", color="white")
     ax.tick_params(colors="white")
-
-    for spine in ax.spines.values():
-        spine.set_color("#22C55E")
 
     st.pyplot(fig)
 
@@ -191,9 +166,8 @@ st.divider()
 # =========================
 col1, col2 = st.columns(2)
 
-# CONTRACT
 with col1:
-    st.subheader("📄 Contract Type")
+    st.subheader("Contract Type")
 
     contract = df["contract"].value_counts()
 
@@ -202,19 +176,17 @@ with col1:
     ax.set_facecolor("none")
 
     ax.pie(
-        contract,
-        labels=contract.index,
+        contract.values,
+        labels=[str(i) for i in contract.index],
         autopct="%1.1f%%",
-        textprops={"color": "#22C55E"}
+        colors=["#22C55E", "#EF4444"][:len(contract)],
+        textprops={"color": "white"}
     )
-
-    ax.set_title("Contract Distribution", color="#22C55E")
 
     st.pyplot(fig)
 
-# SALARY
 with col2:
-    st.subheader("💰 Salary Distribution")
+    st.subheader("Salary Distribution")
 
     salary = df["Salary"].dropna()
 
@@ -224,7 +196,6 @@ with col2:
 
     ax.hist(salary, bins=25, color="#22C55E", edgecolor="white")
 
-    ax.set_title("Salary Distribution", color="#22C55E")
     ax.tick_params(colors="white")
 
     st.pyplot(fig)
@@ -232,13 +203,12 @@ with col2:
 st.divider()
 
 # =========================
-# TECH ANALYSIS
+# TECH ANALYSIS (FIXED)
 # =========================
-st.subheader("💻 Tech vs Non-Tech Analysis")
+st.subheader("Tech vs Non-Tech")
 
 col1, col2 = st.columns(2)
 
-# AVG SALARY
 with col1:
     salary_comp = df.groupby("is_tech_job")["Salary"].mean()
 
@@ -248,48 +218,41 @@ with col1:
 
     salary_comp.plot(kind="bar", ax=ax, color=["#EF4444", "#22C55E"])
 
-    ax.set_title("Average Salary", color="#22C55E")
-
-    labels = ["Non-Tech", "Tech"]
-    ax.set_xticks(range(len(salary_comp)))
-    ax.set_xticklabels([labels[i] for i in salary_comp.index], color="white")
+    ax.set_xticklabels(["Non-Tech", "Tech"], color="white")
 
     st.pyplot(fig)
 
-# PIE SHARE
 with col2:
     counts = df["is_tech_job"].value_counts()
+
+    labels = ["Non-Tech" if i == 0 else "Tech" for i in counts.index]
 
     fig, ax = plt.subplots()
     fig.patch.set_alpha(0)
     ax.set_facecolor("none")
 
     ax.pie(
-        counts,
-        labels=["Non-Tech", "Tech"][:len(counts)],
+        counts.values,
+        labels=labels,
         autopct="%1.1f%%",
-        colors=["#EF4444", "#22C55E"],
+        colors=["#EF4444", "#22C55E"][:len(counts)],
         textprops={"color": "white"}
     )
-
-    ax.set_title("Job Share", color="#22C55E")
 
     st.pyplot(fig)
 
 # =========================
-# DATA TABLE
+# TABLE
 # =========================
-st.subheader("📋 Data Preview")
+st.subheader("Data Preview")
 st.dataframe(df, use_container_width=True)
 
 # =========================
 # DOWNLOAD
 # =========================
-csv = df.to_csv(index=False)
-
 st.download_button(
-    "📥 Download Data",
-    data=csv,
-    file_name="Jadarat_filtered.csv",
-    mime="text/csv"
+    "Download CSV",
+    df.to_csv(index=False),
+    "Jadarat_filtered.csv",
+    "text/csv"
 )
