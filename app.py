@@ -572,7 +572,6 @@ print(
 
 df.to_csv("Jadarat.csv", index=False)
 
-
 files.download("Jadarat.csv")
 files.download("requirements.txt")
 
