@@ -143,26 +143,43 @@ st.divider()
 
 st.subheader("📈 Key Insights")
 
-top_city = df["city"].value_counts().idxmax()
-top_city_count = df["city"].value_counts().max()
+if "city" in df.columns and len(df["city"].dropna()) > 0:
 
-top_job = df["job_title"].value_counts().idxmax()
-top_job_count = df["job_title"].value_counts().max()
+    city_counts = df["city"].value_counts()
+    top_city = city_counts.idxmax()
+    top_city_count = city_counts.max()
 
-avg_salary = df["Salary"].mean()
+else:
+    top_city = "N/A"
+    top_city_count = 0
+
+
+if "job_title" in df.columns and len(df["job_title"].dropna()) > 0:
+
+    job_counts = df["job_title"].value_counts()
+    top_job = job_counts.idxmax()
+    top_job_count = job_counts.max()
+
+else:
+    top_job = "N/A"
+    top_job_count = 0
+
+
+avg_salary = df["Salary"].mean() if "Salary" in df.columns else 0
+
 
 col1, col2, col3 = st.columns(3)
 
 col1.success(
-    f"📍 {top_city} has the highest number of job postings ({top_city_count:,})."
+    f"📍 Top City: {top_city} ({top_city_count:,})"
 )
 
 col2.info(
-    f"💼 Most demanded role is '{top_job}' with {top_job_count:,} postings."
+    f"💼 Top Job: {top_job} ({top_job_count:,})"
 )
 
 col3.warning(
-    f"💰 Average salary is approximately {avg_salary:,.0f} SAR."
+    f"💰 Avg Salary: {avg_salary:,.0f} SAR" if avg_salary == avg_salary else "💰 Avg Salary: N/A"
 )
 
 # =========================
