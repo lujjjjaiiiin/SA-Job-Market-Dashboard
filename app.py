@@ -151,19 +151,24 @@ def kpi_card(title, value, icon, color):
         text-align: center;
         box-shadow: 0 8px 25px rgba(0,0,0,0.3);
         transition: all 0.3s ease-in-out;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
     "
     onmouseover="this.style.transform='scale(1.07)';"
     onmouseout="this.style.transform='scale(1)';">
 
         <div style="font-size:30px;">{icon}</div>
 
-        <h2 style="color:{color}; margin:8px 0; font-size:22px;">
+        <h2 style="color:{color}; margin:0; font-size:24px;">
             {value}
         </h2>
 
         <p style="color:#A7F3D0; margin:0; font-size:13px;">
             {title}
         </p>
+
     </div>
     """, unsafe_allow_html=True)
 
