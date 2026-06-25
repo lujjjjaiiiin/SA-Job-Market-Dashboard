@@ -43,35 +43,64 @@ df["is_tech_job"] = (
 )
 
 # =========================
-# HEADER (CLEAN + MODERN)
+# STYLE (GREEN SAUDI THEME)
+# =========================
+st.markdown("""
+<style>
+
+/* Background */
+.main {
+    background: linear-gradient(180deg,#0B1220,#0F172A);
+}
+
+/* Headings */
+h1, h2, h3 {
+    color: #22C55E;
+}
+
+/* Sidebar 💚 */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg,#052e16,#14532D);
+    border-right: 2px solid #22C55E;
+}
+
+[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+/* Metrics */
+[data-testid="stMetric"] {
+    background: rgba(34,197,94,0.08);
+    border-radius: 12px;
+    padding: 10px;
+    border: 1px solid rgba(34,197,94,0.25);
+}
+
+</style>
+""", unsafe_allow_html=True)
+
+# =========================
+# HEADER 🇸🇦
 # =========================
 st.markdown("""
 <div style="
-    background: linear-gradient(135deg, #0B1220, #0F2A1D);
-    padding: 22px;
-    border-radius: 18px;
-    border: 1px solid rgba(34,197,94,0.35);
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin-bottom: 20px;
+    background: linear-gradient(135deg,#0B1220,#14532D);
+    padding:20px;
+    border-radius:15px;
+    display:flex;
+    align-items:center;
+    gap:15px;
 ">
 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Saudi_Arabia_location_map.svg"
-         width="65">
+<img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" width="60">
 
-    <div>
-        <h1 style="color:#22C55E; margin:0; font-size:26px;">
-            Saudi Arabia Job Market Dashboard 🇸🇦
-        </h1>
-        <p style="color:#A7F3D0; margin:4px 0 0;">
-            Vision 2030 • Jadarat Dataset • Data Analytics
-        </p>
-    </div>
+<div>
+<h1 style="color:#22C55E;margin:0;">Saudi Arabia Job Market Dashboard</h1>
+<p style="color:#A7F3D0;margin:0;">🇸🇦 Vision 2030 • Jadarat Dataset</p>
+</div>
 
 </div>
 """, unsafe_allow_html=True)
-
 # =========================
 # SIDEBAR
 # =========================
