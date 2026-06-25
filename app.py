@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.express as px
 
 # =========================
 # PAGE CONFIG
@@ -43,22 +43,18 @@ df["is_tech_job"] = (
 )
 
 # =========================
-# STYLE (GREEN SAUDI THEME)
+# STYLE
 # =========================
 st.markdown("""
 <style>
-
-/* Background */
 .main {
     background: linear-gradient(180deg,#0B1220,#0F172A);
 }
 
-/* Headings */
 h1, h2, h3 {
     color: #22C55E;
 }
 
-/* Sidebar 💚 */
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg,#052e16,#14532D);
     border-right: 2px solid #22C55E;
@@ -67,20 +63,11 @@ h1, h2, h3 {
 [data-testid="stSidebar"] * {
     color: white !important;
 }
-
-/* Metrics */
-[data-testid="stMetric"] {
-    background: rgba(34,197,94,0.08);
-    border-radius: 12px;
-    padding: 10px;
-    border: 1px solid rgba(34,197,94,0.25);
-}
-
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# HEADER 🇸🇦
+# HEADER
 # =========================
 st.markdown("""
 <div style="
@@ -96,7 +83,7 @@ st.markdown("""
 
 <div>
 <h1 style="color:#22C55E;margin:0;">Saudi Arabia Job Market Dashboard</h1>
-<p style="color:#A7F3D0;margin:0;"> Vision 2030 • Jadarat Dataset</p>
+<p style="color:#A7F3D0;margin:0;">Vision 2030 • Jadarat Dataset</p>
 </div>
 
 </div>
@@ -129,7 +116,7 @@ if df.empty:
     st.stop()
 
 # =========================
-# KPIs
+# KPI METRICS
 # =========================
 col1, col2, col3 = st.columns(3)
 
@@ -140,106 +127,130 @@ col3.metric("Tech %", f"{df['is_tech_job'].mean()*100:.1f}%")
 st.divider()
 
 # =========================
-# TOP JOBS & CITIES
+# TOP JOBS (HOVER)
 # =========================
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader(" Top Job Titles")
-    top_jobs = df["job_title"].value_counts().head(10)
+    st.subheader("Top Job Titles")
 
-    fig, ax = plt.subplots()
-    fig.patch.set_alpha(0)
-    ax.set_facecolor("none")
+    top_jobs = df["job_title"].value_counts().head(10).reset_index()
+    top_jobs.columns = ["job_title", "count"]
 
-    top_jobs.sort_values().plot(kind="barh", ax=ax, color="#22C55E")
-    ax.tick_params(colors="white")
+    fig = px.bar(
+        top_jobs,
+        x="count",
+        y="job_title",
+        orientation="h",
+        text="count"
+    )
 
-    st.pyplot(fig)
+    fig.update_traces(marker_color="#22C55E")
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font_color="white"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
 with col2:
     st.subheader("Top Cities")
-    top_cities = df["city"].value_counts().head(10)
 
-    fig, ax = plt.subplots()
-    fig.patch.set_alpha(0)
-    ax.set_facecolor("none")
+    top_cities = df["city"].value_counts().head(10).reset_index()
+    top_cities.columns = ["city", "count"]
 
-    top_cities.sort_values().plot(kind="barh", ax=ax, color="#16A34A")
-    ax.tick_params(colors="white")
+    fig = px.bar(
+        top_cities,
+        x="count",
+        y="city",
+        orientation="h",
+        text="count"
+    )
 
-    st.pyplot(fig)
+    fig.update_traces(marker_color="#16A34A")
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font_color="white"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
 
 # =========================
-# CONTRACT + SALARY
+# CONTRACT PIE (HOVER)
 # =========================
 col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Contract Type")
 
-    contract = df["contract"].value_counts()
+    contract = df["contract"].value_counts().reset_index()
+    contract.columns = ["contract", "count"]
 
-    fig, ax = plt.subplots()
-    fig.patch.set_alpha(0)
-    ax.set_facecolor("none")
-
-    ax.pie(
-        contract.values,
-        labels=[str(i) for i in contract.index],
-        autopct="%1.1f%%",
-        colors=["#22C55E", "#EF4444"][:len(contract)],
-        textprops={"color": "white"}
+    fig = px.pie(
+        contract,
+        names="contract",
+        values="count",
+        hole=0.4
     )
 
-    st.pyplot(fig)
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        font_color="white"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
 
 with col2:
     st.subheader("Salary Distribution")
 
-    salary = df["Salary"].dropna()
+    fig = px.histogram(
+        df,
+        x="Salary",
+        nbins=25
+    )
 
-    fig, ax = plt.subplots()
-    fig.patch.set_alpha(0)
-    ax.set_facecolor("none")
+    fig.update_traces(marker_color="#22C55E")
 
-    ax.hist(salary, bins=25, color="#22C55E", edgecolor="white")
+    fig.update_layout(
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font_color="white"
+    )
 
-    ax.tick_params(colors="white")
-
-    st.pyplot(fig)
+    st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
 
 # =========================
-# TECH SECTION (ONE CHART ONLY 💚)
+# TECH VS NON TECH
 # =========================
 st.subheader("Tech vs Non-Tech (Average Salary)")
 
-salary_comp = df.groupby("is_tech_job")["Salary"].mean()
+salary_comp = df.groupby("is_tech_job")["Salary"].mean().reset_index()
+salary_comp["type"] = salary_comp["is_tech_job"].map({0: "Non-Tech", 1: "Tech"})
 
-labels_map = {0: "Non-Tech", 1: "Tech"}
-
-fig, ax = plt.subplots()
-fig.patch.set_alpha(0)
-ax.set_facecolor("none")
-
-salary_comp.plot(kind="bar", ax=ax, color=["#EF4444", "#22C55E"])
-
-ax.set_xticklabels(
-    [labels_map[i] for i in salary_comp.index],
-    rotation=0,
-    color="white"
+fig = px.bar(
+    salary_comp,
+    x="type",
+    y="Salary",
+    text="Salary"
 )
 
-ax.tick_params(colors="white")
+fig.update_traces(marker_color=["#EF4444", "#22C55E"])
+fig.update_layout(
+    paper_bgcolor="rgba(0,0,0,0)",
+    plot_bgcolor="rgba(0,0,0,0)",
+    font_color="white"
+)
 
-st.pyplot(fig)
+st.plotly_chart(fig, use_container_width=True)
 
 # =========================
-# DATA
+# DATA PREVIEW
 # =========================
 st.subheader("Data Preview")
 st.dataframe(df, use_container_width=True)
