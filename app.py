@@ -570,12 +570,14 @@ print(
 # pands
 #
 
-df.to_csv("Jadarat.csv", index=False)
+csv = df.to_csv(index=False)
 
-files.download("Jadarat.csv")
-files.download("requirements.txt")
-
-df = pd.read_csv("Jadarat.csv")
+st.download_button(
+    label="Download CSV",
+    data=csv,
+    file_name="Jadarat.csv",
+    mime="text/csv"
+)
 
 """#5. **Insight:**
 
