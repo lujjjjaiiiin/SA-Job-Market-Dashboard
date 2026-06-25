@@ -142,35 +142,41 @@ def fmt(x):
 # KPI CARD (FINAL)
 # =========================
 def kpi_card(title, value, icon, color):
-    st.markdown(f"""
-    <div style="
-        background: linear-gradient(145deg, rgba(34,197,94,0.10), rgba(15,23,42,0.9));
-        border: 1px solid rgba(34,197,94,0.25);
-        padding: 18px;
-        border-radius: 18px;
-        text-align: center;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        transition: all 0.3s ease-in-out;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 6px;
-    "
-    onmouseover="this.style.transform='scale(1.07)';"
-    onmouseout="this.style.transform='scale(1)';">
+    st.markdown(
+        f"""
+        <div style="
+            background: rgba(34,197,94,0.08);
+            border: 1px solid rgba(34,197,94,0.25);
+            padding: 18px;
+            border-radius: 18px;
+            text-align: center;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+        ">
 
-        <div style="font-size:30px;">{icon}</div>
+            <div style="font-size:32px; margin-bottom:6px;">
+                {icon}
+            </div>
 
-        <h2 style="color:{color}; margin:0; font-size:24px;">
-            {value}
-        </h2>
+            <div style="
+                color:{color};
+                font-size:26px;
+                font-weight:700;
+                margin-bottom:4px;
+            ">
+                {value}
+            </div>
 
-        <p style="color:#A7F3D0; margin:0; font-size:13px;">
-            {title}
-        </p>
+            <div style="
+                color:#A7F3D0;
+                font-size:13px;
+            ">
+                {title}
+            </div>
 
-    </div>
-    """, unsafe_allow_html=True)
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 # =========================
 # KPI ROW
