@@ -13,6 +13,22 @@ st.set_page_config(
 )
 
 # =========================
+# LOAD DATA
+# =========================
+@st.cache_data
+def load_data():
+    df = pd.read_csv("Jadarat.csv")
+    df.columns = df.columns.str.strip()
+    df = df.drop_duplicates()
+    return df
+
+df = load_data()
+
+if df.empty:
+    st.error("Dataset is empty")
+    st.stop()
+
+# =========================
 # CSS DESIGN (GREEN SAUDI THEME)
 # =========================
 st.markdown("""
@@ -71,21 +87,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# =========================
-# LOAD DATA
-# =========================
-@st.cache_data
-def load_data():
-    df = pd.read_csv("Jadarat.csv")
-    df.columns = df.columns.str.strip()
-    df = df.drop_duplicates()
-    return df
-
-df = load_data()
-
-if df.empty:
-    st.error("Dataset is empty")
-    st.stop()
 
 # =========================
 # FEATURE ENGINEERING
