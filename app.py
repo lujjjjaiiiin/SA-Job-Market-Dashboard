@@ -47,51 +47,61 @@ df["is_tech_job"] = (
 # =========================
 st.markdown("""
 <style>
-.main {
-    background: linear-gradient(180deg,#0B1220,#0F172A);
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% {opacity: 0; transform: translateY(-15px);}
+    100% {opacity: 1; transform: translateY(0);}
 }
 
-h1, h2, h3 {
-    color: #22C55E;
+/* Glow animation */
+@keyframes glow {
+    0% {box-shadow: 0 0 5px rgba(34,197,94,0.2);}
+    50% {box-shadow: 0 0 20px rgba(34,197,94,0.4);}
+    100% {box-shadow: 0 0 5px rgba(34,197,94,0.2);}
 }
 
-[data-testid="stSidebar"] {
-    background: linear-gradient(180deg,#052e16,#14532D);
-    border-right: 2px solid #22C55E;
+.header-box {
+    animation: fadeIn 0.8s ease-out, glow 3s infinite ease-in-out;
 }
 
-[data-testid="stSidebar"] * {
-    color: white !important;
-}
 </style>
-""", unsafe_allow_html=True)
 
-# =========================
-# HEADER
-# =========================
-st.markdown("""
-<div style="
-    background: linear-gradient(135deg,#0B1220,#14532D);
-    padding:20px;
-    border-radius:15px;
-    display:flex;
-    align-items:center;
-    gap:15px;
+<div class="header-box" style="
+    background: linear-gradient(135deg, #0B1220, #0F2A1D);
+    padding: 22px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    border: 1px solid rgba(34,197,94,0.25);
 ">
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" width="60">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Saudi_Arabia_location_map.svg"
+         width="70"
+         style="filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.4));">
 
-<div>
-<h1 style="color:#22C55E;margin:0;">Saudi Arabia Job Market Dashboard</h1>
-<p style="color:#A7F3D0;margin:0;">Vision 2030 • Jadarat Dataset</p>
-</div>
+    <div>
+        <h1 style="
+            color:#22C55E;
+            margin:0;
+            font-size:28px;
+            font-weight:800;
+        ">
+            Saudi Arabia Job Market Dashboard
+        </h1>
+
+        <p style="
+            color:#A7F3D0;
+            margin:5px 0 0;
+            font-size:14px;
+        ">
+            📊 Vision 2030 • Job Analytics • AI Insights • Jadarat Dataset
+        </p>
+    </div>
 
 </div>
 """, unsafe_allow_html=True)
-st.markdown(
-    "<hr style='border:1px solid #22C55E;'>",
-    unsafe_allow_html=True
-)
 # =========================
 # SIDEBAR FILTERS
 # =========================
