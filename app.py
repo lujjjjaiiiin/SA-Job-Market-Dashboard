@@ -145,13 +145,42 @@ def fmt(x):
 # =========================
 # KPI ROW
 # =========================
-c1, c2, c3, c4 = st.columns(4)
 
-c1.metric("Jobs", fmt(len(df)))
-c2.metric("Companies", fmt(df["comp_name"].nunique()) if "comp_name" in df else "N/A")
-c3.metric("Tech Jobs", fmt(df["is_tech_job"].sum()))
+def kpi_card(title, value, icon, color):
+    st.markdown(f"""
+    <div style="
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(34,197,94,0.2);
+        padding: 18px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        transition: 0.3s;
+    " onmouseover="this.style.transform='scale(1.05)'"
+      onmouseout="this.style.transform='scale(1)'">
 
-st.divider()
+        <div style="font-size:28px;">{icon}</div>
+
+        <h3 style="color:{color}; margin:5px 0;">
+            {value}
+        </h3>
+
+        <p style="color:#A7F3D0; margin:0; font-size:13px;">
+            {title}
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+c1, c2, c3 = st.columns(3)
+
+with c1:
+    kpi_card("Total Jobs", f"{len(df):,}", "📊", "#22C55E")
+
+with c2:
+    kpi_card("Companies", f"{df['comp_name'].nunique():,}", "🏢", "#60A5FA")
+
+with c3:
+    kpi_card("Tech Jobs", f"{df['is_tech_job'].sum():,}", "💻", "#FACC15")
 
 # =========================
 # INSIGHTS (SAFE)
