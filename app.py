@@ -216,7 +216,7 @@ st.divider()
 # =========================
 # TECH SECTION (ONE CHART ONLY 💚)
 # =========================
-st.subheader("💻 Tech vs Non-Tech (Average Salary)")
+st.subheader("Tech vs Non-Tech (Average Salary)")
 
 salary_comp = df.groupby("is_tech_job")["Salary"].mean()
 
@@ -241,7 +241,7 @@ st.pyplot(fig)
 # =========================
 # DATA
 # =========================
-st.subheader("📋 Data Preview")
+st.subheader("Data Preview")
 st.dataframe(df, use_container_width=True)
 
 # =========================
