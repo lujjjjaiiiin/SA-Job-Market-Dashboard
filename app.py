@@ -11,10 +11,7 @@ st.set_page_config(
     layout="wide",
     page_icon="🇸🇦"
 )
-st.markdown(
-    "<hr style='border:1px solid #22C55E;'>",
-    unsafe_allow_html=True
-)
+
 # =========================
 # LOAD DATA
 # =========================
@@ -91,7 +88,10 @@ st.markdown("""
 
 </div>
 """, unsafe_allow_html=True)
-
+st.markdown(
+    "<hr style='border:1px solid #22C55E;'>",
+    unsafe_allow_html=True
+)
 # =========================
 # SIDEBAR FILTERS
 # =========================
