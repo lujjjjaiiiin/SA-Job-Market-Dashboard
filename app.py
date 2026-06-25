@@ -43,67 +43,22 @@ df["is_tech_job"] = (
 )
 
 # =========================
-# STYLE
+# HEADER (CLEAN + MODERN)
 # =========================
 st.markdown("""
-<style>
-
-/* Fade-in animation */
-@keyframes fadeIn {
-    0% {opacity: 0; transform: translateY(-15px);}
-    100% {opacity: 1; transform: translateY(0);}
-}
-
-/* Glow animation */
-@keyframes glow {
-    0% {box-shadow: 0 0 5px rgba(34,197,94,0.2);}
-    50% {box-shadow: 0 0 20px rgba(34,197,94,0.4);}
-    100% {box-shadow: 0 0 5px rgba(34,197,94,0.2);}
-}
-
-.header-box {
-    animation: fadeIn 0.8s ease-out, glow 3s infinite ease-in-out;
-}
-
-</style>
-
-<div class="header-box" style="
-    background: linear-gradient(135deg, #0B1220, #0F2A1D);
-    padding: 22px;
-    border-radius: 18px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    border: 1px solid rgba(34,197,94,0.25);
+<div style="
+    background: linear-gradient(135deg,#0B1220,#0F2A1D);
+    padding:20px;
+    border-radius:16px;
+    border:1px solid rgba(34,197,94,0.3);
 ">
-
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Saudi_Arabia_location_map.svg"
-         width="70"
-         style="filter: drop-shadow(0px 4px 6px rgba(0,0,0,0.4));">
-
-    <div>
-        <h1 style="
-            color:#22C55E;
-            margin:0;
-            font-size:28px;
-            font-weight:800;
-        ">
-            Saudi Arabia Job Market Dashboard
-        </h1>
-
-        <p style="
-            color:#A7F3D0;
-            margin:5px 0 0;
-            font-size:14px;
-        ">
-            📊 Vision 2030 • Job Analytics • AI Insights • Jadarat Dataset
-        </p>
-    </div>
-
+<h1 style="color:#22C55E;margin:0;">🇸🇦 Saudi Job Market Dashboard</h1>
+<p style="color:#A7F3D0;margin:5px 0 0;">Vision 2030 • Jadarat Dataset • Analytics</p>
 </div>
 """, unsafe_allow_html=True)
+
 # =========================
-# SIDEBAR FILTERS
+# SIDEBAR
 # =========================
 st.sidebar.header("🔎 Filters")
 
@@ -124,129 +79,83 @@ if tech_filter == "Tech Only":
 elif tech_filter == "Non-Tech Only":
     df = df[df["is_tech_job"] == 0]
 
-if df.empty:
-    st.warning("No data for selected filters")
-    st.stop()
-
 job_search = st.sidebar.text_input("🔍 Search Job Title")
 
 if job_search:
-    df = df[
-        df["job_title"]
-        .str.contains(job_search, case=False, na=False)
-    ]
+    df = df[df["job_title"].str.contains(job_search, case=False, na=False)]
+
+if df.empty:
+    st.warning("No data after filters")
+    st.stop()
 
 # =========================
-# KPI METRICS
+# SAFE KPI FORMAT
 # =========================
-col1, col2, col3 = st.columns(3)
+def fmt(x):
+    if x >= 1_000_000:
+        return f"{x/1_000_000:.1f}M"
+    if x >= 1_000:
+        return f"{x/1_000:.1f}K"
+    return str(int(x))
 
-col1.metric("Total Jobs", len(df))
-col2.metric("Tech Jobs", df["is_tech_job"].sum())
-col3.metric("Tech %", f"{df['is_tech_job'].mean()*100:.1f}%")
+# =========================
+# KPI ROW
+# =========================
+c1, c2, c3, c4 = st.columns(4)
+
+c1.metric("📌 Jobs", fmt(len(df)))
+c2.metric("🏢 Companies", fmt(df["comp_name"].nunique()) if "comp_name" in df else "N/A")
+c3.metric("💻 Tech Jobs", fmt(df["is_tech_job"].sum()))
+c3.metric("📊 Tech %", f"{df['is_tech_job'].mean()*100:.1f}%")
 
 st.divider()
 
 # =========================
-# INSIGHTS
+# INSIGHTS (SAFE)
 # =========================
-
 st.subheader("📈 Key Insights")
 
-if "city" in df.columns and len(df["city"].dropna()) > 0:
+top_city = df["city"].value_counts().idxmax() if "city" in df else "N/A"
+top_job = df["job_title"].value_counts().idxmax()
+avg_salary = df["Salary"].mean() if "Salary" in df else 0
 
-    city_counts = df["city"].value_counts()
-    top_city = city_counts.idxmax()
-    top_city_count = city_counts.max()
+a, b, c = st.columns(3)
 
-else:
-    top_city = "N/A"
-    top_city_count = 0
+a.success(f"📍 Top City: {top_city}")
+b.info(f"💼 Top Job: {top_job}")
+c.warning(f"💰 Avg Salary: {avg_salary:,.0f} SAR")
 
-
-if "job_title" in df.columns and len(df["job_title"].dropna()) > 0:
-
-    job_counts = df["job_title"].value_counts()
-    top_job = job_counts.idxmax()
-    top_job_count = job_counts.max()
-
-else:
-    top_job = "N/A"
-    top_job_count = 0
-
-
-avg_salary = df["Salary"].mean() if "Salary" in df.columns else 0
-
-
-col1, col2, col3 = st.columns(3)
-
-col1.success(
-    f"📍 Top City: {top_city} ({top_city_count:,})"
-)
-
-col2.info(
-    f"💼 Top Job: {top_job} ({top_job_count:,})"
-)
-
-col3.warning(
-    f"💰 Avg Salary: {avg_salary:,.0f} SAR" if avg_salary == avg_salary else "💰 Avg Salary: N/A"
-)
+st.divider()
 
 # =========================
-# TOP JOBS (HOVER)
+# TOP JOBS & CITIES (PLOTLY)
 # =========================
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Top Job Titles")
-
+    st.subheader("Top Jobs")
     top_jobs = df["job_title"].value_counts().head(10).reset_index()
-    top_jobs.columns = ["job_title", "count"]
+    top_jobs.columns = ["job", "count"]
 
-    fig = px.bar(
-        top_jobs,
-        x="count",
-        y="job_title",
-        orientation="h",
-        text="count"
-    )
-
+    fig = px.bar(top_jobs, x="count", y="job", orientation="h", text="count")
+    fig.update_layout(template="plotly_dark")
     fig.update_traces(marker_color="#22C55E")
-    fig.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font_color="white"
-    )
-
     st.plotly_chart(fig, use_container_width=True)
 
 with col2:
     st.subheader("Top Cities")
-
     top_cities = df["city"].value_counts().head(10).reset_index()
     top_cities.columns = ["city", "count"]
 
-    fig = px.bar(
-        top_cities,
-        x="count",
-        y="city",
-        orientation="h",
-        text="count"
-    )
-
+    fig = px.bar(top_cities, x="count", y="city", orientation="h", text="count")
+    fig.update_layout(template="plotly_dark")
     fig.update_traces(marker_color="#16A34A")
-    fig.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font_color="white"
-    )
-
     st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
 
 # =========================
-# CONTRACT PIE (HOVER)
+# CONTRACT + SALARY
 # =========================
 col1, col2 = st.columns(2)
 
@@ -254,72 +163,39 @@ with col1:
     st.subheader("Contract Type")
 
     contract = df["contract"].value_counts().reset_index()
-    contract.columns = ["contract", "count"]
+    contract.columns = ["type", "count"]
 
-    fig = px.pie(
-        contract,
-        names="contract",
-        values="count",
-        hole=0.4
-    )
-
-    fig.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)",
-        font_color="white"
-    )
-
+    fig = px.pie(contract, names="type", values="count", hole=0.5)
+    fig.update_layout(template="plotly_dark")
     st.plotly_chart(fig, use_container_width=True)
 
 with col2:
     st.subheader("Salary Distribution")
 
-    fig = px.histogram(
-        df,
-        x="Salary",
-        nbins=25
-    )
-
-    fig.update_traces(marker_color="#22C55E")
-
-    fig.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font_color="white"
-    )
-
+    fig = px.histogram(df, x="Salary", nbins=25)
+    fig.update_layout(template="plotly_dark")
     st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
 
 # =========================
-# TECH VS NON TECH
+# TECH ANALYSIS
 # =========================
-st.subheader("Tech vs Non-Tech (Average Salary)")
+st.subheader("Tech vs Non-Tech")
 
-salary_comp = df.groupby("is_tech_job")["Salary"].mean().reset_index()
-salary_comp["type"] = salary_comp["is_tech_job"].map({0: "Non-Tech", 1: "Tech"})
+tech = df.groupby("is_tech_job")["Salary"].mean().reset_index()
+tech["type"] = tech["is_tech_job"].map({0: "Non-Tech", 1: "Tech"})
 
-fig = px.bar(
-    salary_comp,
-    x="type",
-    y="Salary",
-    text="Salary"
-)
-
+fig = px.bar(tech, x="type", y="Salary", text="Salary")
+fig.update_layout(template="plotly_dark")
 fig.update_traces(marker_color=["#EF4444", "#22C55E"])
-fig.update_layout(
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
-    font_color="white"
-)
 
 st.plotly_chart(fig, use_container_width=True)
 
 # =========================
-# DATA PREVIEW
+# DATA
 # =========================
-st.caption(f"Showing {len(df):,} job postings")
-st.subheader("Data Preview")
+st.caption(f"Rows: {len(df):,}")
 st.dataframe(df, use_container_width=True)
 
 # =========================
@@ -328,6 +204,6 @@ st.dataframe(df, use_container_width=True)
 st.download_button(
     "📥 Download Data",
     df.to_csv(index=False),
-    "Jadarat_filtered.csv",
+    "jadarat.csv",
     "text/csv"
 )
