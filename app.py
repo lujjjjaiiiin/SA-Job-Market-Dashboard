@@ -127,6 +127,34 @@ col3.metric("Tech %", f"{df['is_tech_job'].mean()*100:.1f}%")
 st.divider()
 
 # =========================
+# INSIGHTS
+# =========================
+
+st.subheader("📈 Key Insights")
+
+top_city = df["city"].value_counts().idxmax()
+top_city_count = df["city"].value_counts().max()
+
+top_job = df["job_title"].value_counts().idxmax()
+top_job_count = df["job_title"].value_counts().max()
+
+avg_salary = df["Salary"].mean()
+
+col1, col2, col3 = st.columns(3)
+
+col1.success(
+    f"📍 {top_city} has the highest number of job postings ({top_city_count:,})."
+)
+
+col2.info(
+    f"💼 Most demanded role is '{top_job}' with {top_job_count:,} postings."
+)
+
+col3.warning(
+    f"💰 Average salary is approximately {avg_salary:,.0f} SAR."
+)
+
+# =========================
 # TOP JOBS (HOVER)
 # =========================
 col1, col2 = st.columns(2)
