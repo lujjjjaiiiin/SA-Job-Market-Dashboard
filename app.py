@@ -263,8 +263,6 @@ print(
 
 """# 4. **Streamlit**"""
 
-!pip install streamlit -q
-
 # Commented out IPython magic to ensure Python compatibility.
 # %%writefile app.py
 # import streamlit as st
