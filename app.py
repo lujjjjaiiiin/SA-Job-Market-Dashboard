@@ -46,42 +46,29 @@ df["is_tech_job"] = (
 # HEADER (CLEAN + MODERN)
 # =========================
 st.markdown("""
-<style>
-.header {
+<div style="
     background: linear-gradient(135deg, #0B1220, #0F2A1D);
-    padding: 18px 22px;
-    border-radius: 16px;
+    padding: 22px;
+    border-radius: 18px;
     border: 1px solid rgba(34,197,94,0.35);
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 18px;
     margin-bottom: 20px;
-}
+">
 
-.header img {
-    width: 65px;
-}
-
-.header h1 {
-    color: #22C55E;
-    font-size: 26px;
-    margin: 0;
-}
-
-.header p {
-    color: #A7F3D0;
-    margin: 4px 0 0;
-    font-size: 13px;
-}
-</style>
-
-<div class="header">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Saudi_Arabia_location_map.svg">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Saudi_Arabia_location_map.svg"
+         width="65">
 
     <div>
-        <h1>Saudi Arabia Job Market Dashboard 🇸🇦</h1>
-        <p>Vision 2030 • Jadarat Dataset • Data Analytics</p>
+        <h1 style="color:#22C55E; margin:0; font-size:26px;">
+            Saudi Arabia Job Market Dashboard 🇸🇦
+        </h1>
+        <p style="color:#A7F3D0; margin:4px 0 0;">
+            Vision 2030 • Jadarat Dataset • Data Analytics
+        </p>
     </div>
+
 </div>
 """, unsafe_allow_html=True)
 
