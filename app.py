@@ -13,10 +13,35 @@ st.set_page_config(
 )
 
 # =========================
+# STYLE (DARK + CLEAN UI)
+# =========================
+st.markdown("""
+    <style>
+        .main {
+            background-color: #0E1117;
+        }
+
+        h1, h2, h3 {
+            color: #FFFFFF;
+        }
+
+        .stMetric {
+            background-color: rgba(255,255,255,0.05);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        section[data-testid="stSidebar"] {
+            background-color: #111827;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# =========================
 # TITLE
 # =========================
 st.title("📊 Saudi Arabia Job Market Dashboard")
-st.caption("Jadarat Dataset Analysis — Clean & Interactive Dashboard")
+st.caption("Jadarat Dataset Analysis — Clean & Professional View")
 
 # =========================
 # LOAD DATA
@@ -30,15 +55,12 @@ def load_data():
 
 df = load_data()
 
-# =========================
-# CHECK DATA SAFETY
-# =========================
 if df.empty:
-    st.error("Dataset is empty!")
+    st.error("Dataset is empty")
     st.stop()
 
 # =========================
-# FEATURE ENGINEERING (TECH DETECTION)
+# TECH FEATURE
 # =========================
 df["job_title"] = df["job_title"].astype(str)
 
@@ -56,41 +78,25 @@ df["is_tech_job"] = (
 # =========================
 st.sidebar.header("🔎 Filters")
 
-# CITY FILTER
 if "city" in df.columns:
-    cities = st.sidebar.multiselect(
-        "City",
-        sorted(df["city"].dropna().unique())
-    )
+    cities = st.sidebar.multiselect("City", sorted(df["city"].dropna().unique()))
     if cities:
         df = df[df["city"].isin(cities)]
 
-# CONTRACT FILTER
 if "contract" in df.columns:
-    contracts = st.sidebar.multiselect(
-        "Contract Type",
-        sorted(df["contract"].dropna().unique())
-    )
+    contracts = st.sidebar.multiselect("Contract Type", sorted(df["contract"].dropna().unique()))
     if contracts:
         df = df[df["contract"].isin(contracts)]
 
-# TECH FILTER
-tech_filter = st.sidebar.radio(
-    "Job Type",
-    ["All", "Tech Only", "Non-Tech Only"]
-)
+tech_filter = st.sidebar.radio("Job Type", ["All", "Tech Only", "Non-Tech Only"])
 
 if tech_filter == "Tech Only":
     df = df[df["is_tech_job"] == 1]
-
 elif tech_filter == "Non-Tech Only":
     df = df[df["is_tech_job"] == 0]
 
-# =========================
-# EMPTY CHECK AFTER FILTERS
-# =========================
 if df.empty:
-    st.warning("No data available for selected filters.")
+    st.warning("No data for selected filters")
     st.stop()
 
 # =========================
@@ -120,8 +126,12 @@ with col1:
         fig.patch.set_alpha(0)
         ax.set_facecolor("none")
 
-        top_jobs.sort_values().plot(kind="barh", ax=ax, color="#2E86C1")
-        ax.set_title("Top 10 Job Titles")
+        top_jobs.sort_values().plot(kind="barh", ax=ax, color="#00C2FF")
+        ax.set_title("Top 10 Job Titles", color="white")
+        ax.tick_params(colors="white")
+
+        for spine in ax.spines.values():
+            spine.set_color("white")
 
         st.pyplot(fig)
 
@@ -136,8 +146,12 @@ with col2:
         fig.patch.set_alpha(0)
         ax.set_facecolor("none")
 
-        top_cities.sort_values().plot(kind="barh", ax=ax, color="#E67E22")
-        ax.set_title("Top 10 Cities")
+        top_cities.sort_values().plot(kind="barh", ax=ax, color="#FFA500")
+        ax.set_title("Top 10 Cities", color="white")
+        ax.tick_params(colors="white")
+
+        for spine in ax.spines.values():
+            spine.set_color("white")
 
         st.pyplot(fig)
 
@@ -156,8 +170,17 @@ with col1:
         contract = df["contract"].value_counts()
 
         fig, ax = plt.subplots()
-        ax.pie(contract, labels=contract.index, autopct="%1.1f%%")
-        ax.set_title("Contract Distribution")
+        fig.patch.set_alpha(0)
+        ax.set_facecolor("none")
+
+        ax.pie(
+            contract,
+            labels=contract.index,
+            autopct="%1.1f%%",
+            textprops={"color": "white"}
+        )
+
+        ax.set_title("Contract Distribution", color="white")
 
         st.pyplot(fig)
 
@@ -169,8 +192,16 @@ with col2:
         salary = df["Salary"].dropna()
 
         fig, ax = plt.subplots()
-        ax.hist(salary, bins=25, color="#28B463", edgecolor="white")
-        ax.set_title("Salary Distribution")
+        fig.patch.set_alpha(0)
+        ax.set_facecolor("none")
+
+        ax.hist(salary, bins=25, color="#00FF99", edgecolor="white")
+
+        ax.set_title("Salary Distribution", color="white")
+        ax.tick_params(colors="white")
+
+        for spine in ax.spines.values():
+            spine.set_color("white")
 
         st.pyplot(fig)
 
@@ -188,32 +219,42 @@ with col1:
     salary_comp = df.groupby("is_tech_job")["Salary"].mean()
 
     fig, ax = plt.subplots()
+    fig.patch.set_alpha(0)
+    ax.set_facecolor("none")
 
-    salary_comp.plot(kind="bar", ax=ax, color=["#E74C3C", "#2E86C1"])
-    ax.set_title("Average Salary Comparison")
+    salary_comp.plot(kind="bar", ax=ax, color=["#FF4B4B", "#00C2FF"])
+
+    ax.set_title("Average Salary Comparison", color="white")
+    ax.tick_params(colors="white")
 
     labels = ["Non-Tech", "Tech"]
     ax.set_xticks(range(len(salary_comp)))
-    ax.set_xticklabels(
-        [labels[i] for i in salary_comp.index],
-        rotation=0
-    )
+    ax.set_xticklabels([labels[i] for i in salary_comp.index], rotation=0, color="white")
+
+    for spine in ax.spines.values():
+        spine.set_color("white")
 
     st.pyplot(fig)
 
-# SHARE PIE
+# PIE SHARE
 with col2:
     counts = df["is_tech_job"].value_counts()
 
     fig, ax = plt.subplots()
+    fig.patch.set_alpha(0)
+    ax.set_facecolor("none")
+
+    labels = ["Non-Tech", "Tech"][:len(counts)]
+
     ax.pie(
         counts,
-        labels=["Non-Tech", "Tech"],
+        labels=labels,
         autopct="%1.1f%%",
-        colors=["#E74C3C", "#2E86C1"]
+        colors=["#FF4B4B", "#00C2FF"][:len(counts)],
+        textprops={"color": "white"}
     )
 
-    ax.set_title("Job Type Share")
+    ax.set_title("Job Type Share", color="white")
 
     st.pyplot(fig)
 
@@ -229,9 +270,8 @@ st.dataframe(df, use_container_width=True)
 csv = df.to_csv(index=False)
 
 st.download_button(
-    "📥 Download Filtered Data",
+    "📥 Download Data",
     data=csv,
     file_name="Jadarat_filtered.csv",
     mime="text/csv"
 )
-
