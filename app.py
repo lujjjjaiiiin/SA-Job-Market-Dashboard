@@ -114,7 +114,7 @@ if tech_filter == "Tech Only":
 elif tech_filter == "Non-Tech Only":
     df = df[df["is_tech_job"] == 0]
 
-job_search = st.sidebar.text_input("🔍 Search Job Title")
+job_search = st.sidebar.text_input("🔎 Search Job Title")
 
 if job_search:
     df = df[df["job_title"].str.contains(job_search, case=False, na=False)]
