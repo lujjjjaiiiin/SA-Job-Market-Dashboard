@@ -33,7 +33,7 @@ if df.empty:
 # =========================
 df["job_title"] = df["job_title"].astype(str)
 
-TECH_PATTERN = r'\bdata scientist\b|\bdata analyst\b|\bsoftware\b|\bdeveloper\b|\bai\b|\bmachine learning\b|\bpython\b|\bjava\b|\bsql\b'
+TECH_PATTERN = r'\bdata scientist\b|\bdata \banalyst\b|\bsoftware\b|\bdeveloper\b|\bai\b|\bmachine learning\b|\bpython\b|\bjava\b|\bsql\b'
 
 df["is_tech_job"] = (
     df["job_title"]
