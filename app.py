@@ -43,27 +43,59 @@ df["is_tech_job"] = (
 )
 
 # =========================
-# STYLE
+# STYLE (GREEN & WHITE THEME)
 # =========================
 st.markdown("""
 <style>
 
 .main {
-    background: linear-gradient(180deg,#0B1220,#0F172A);
+    background: linear-gradient(180deg,#FFFFFF,#F0FDF4);
+}
+
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(180deg,#FFFFFF,#F0FDF4);
 }
 
 h1, h2, h3 {
-    color: #22C55E;
+    color: #15803D;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+p, span, label, div {
+    font-family: 'Segoe UI', sans-serif;
 }
 
 /* Sidebar */
 [data-testid="stSidebar"] {
-    background: linear-gradient(180deg,#052e16,#14532D);
+    background: linear-gradient(180deg,#FFFFFF,#DCFCE7);
     border-right: 2px solid #22C55E;
 }
 
 [data-testid="stSidebar"] * {
-    color: white !important;
+    color: #14532D !important;
+}
+
+/* Metric widgets */
+[data-testid="stMetric"] {
+    background: #FFFFFF;
+    border: 1px solid #BBF7D0;
+    border-radius: 14px;
+    padding: 12px;
+    box-shadow: 0 4px 14px rgba(34,197,94,0.10);
+}
+
+[data-testid="stMetricValue"] {
+    color: #15803D;
+}
+
+/* Divider */
+hr {
+    border-color: #BBF7D0;
+}
+
+/* Success/info/warning boxes */
+div[data-testid="stAlert"] {
+    border-radius: 12px;
 }
 
 </style>
@@ -74,23 +106,27 @@ h1, h2, h3 {
 # =========================
 st.markdown("""
 <div style="
-    background: linear-gradient(135deg,#0B1220,#14532D);
-    padding:20px;
-    border-radius:15px;
+    background: linear-gradient(135deg,#FFFFFF,#DCFCE7);
+    padding:25px;
+    border-radius:18px;
     display:flex;
     align-items:center;
     gap:15px;
+    border: 1px solid #BBF7D0;
+    box-shadow: 0 8px 24px rgba(34,197,94,0.12);
 ">
 
 <img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" width="60">
 
 <div>
-<h1 style="color:#22C55E;margin:0;">Saudi Arabia Job Market Dashboard</h1>
-<p style="color:#A7F3D0;margin:0;">🇸🇦 Vision 2030 • Jadarat Dataset</p>
+<h1 style="color:#15803D;margin:0;">Saudi Arabia Job Market Dashboard</h1>
+<p style="color:#16A34A;margin:0;">🇸🇦 Vision 2030 • Jadarat Dataset</p>
 </div>
 
 </div>
 """, unsafe_allow_html=True)
+
+st.write("")
 
 # =========================
 # SIDEBAR FILTERS
@@ -139,21 +175,21 @@ def fmt(x):
     return str(int(x))
 
 # =========================
-# KPI CARD (FINAL)
+# KPI CARD (GREEN & WHITE)
 # =========================
-def kpi_card(title, value, icon, color):
+def kpi_card(title, value, icon, color="#15803D"):
     st.markdown(f"""
     <div style="
-        background: linear-gradient(145deg, rgba(34,197,94,0.10), rgba(15,23,42,0.9));
-        border: 1px solid rgba(34,197,94,0.25);
+        background: #FFFFFF;
+        border: 1px solid #BBF7D0;
         padding: 18px;
         border-radius: 18px;
         text-align: center;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        box-shadow: 0 8px 22px rgba(34,197,94,0.10);
         transition: all 0.3s ease-in-out;
     "
-    onmouseover="this.style.transform='scale(1.07)';"
-    onmouseout="this.style.transform='scale(1)';">
+    onmouseover="this.style.transform='scale(1.05)';this.style.boxShadow='0 12px 28px rgba(34,197,94,0.18)';"
+    onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 22px rgba(34,197,94,0.10)';">
 
         <div style="font-size:30px;">{icon}</div>
 
@@ -161,7 +197,7 @@ def kpi_card(title, value, icon, color):
             {value}
         </h2>
 
-        <p style="color:#A7F3D0; margin:0; font-size:13px;">
+        <p style="color:#16A34A; margin:0; font-size:13px;">
             {title}
         </p>
     </div>
@@ -170,7 +206,6 @@ def kpi_card(title, value, icon, color):
 # =========================
 # KPI ROW
 # =========================
-# SAFE KPI SECTION
 df["is_tech_job"] = pd.to_numeric(df["is_tech_job"], errors="coerce").fillna(0)
 
 total_jobs = len(df)
@@ -180,9 +215,12 @@ comp = df["comp_name"].nunique() if "comp_name" in df.columns else 0
 
 c1, c2, c3 = st.columns(3)
 
-c1.metric("📊 Total Jobs", f"{total_jobs:,}")
-c2.metric("🏢 Companies", f"{comp:,}")
-c3.metric("💻 Tech Jobs", f"{int(tech_jobs):,}")
+with c1:
+    kpi_card("Total Jobs", f"{total_jobs:,}", "📊")
+with c2:
+    kpi_card("Companies", f"{comp:,}", "🏢")
+with c3:
+    kpi_card("Tech Jobs", f"{int(tech_jobs):,}", "💻")
 
 st.divider()
 
@@ -205,6 +243,8 @@ st.divider()
 # =========================
 # CHARTS
 # =========================
+GREEN_SCALE = ["#BBF7D0", "#86EFAC", "#4ADE80", "#22C55E", "#16A34A", "#15803D"]
+
 col1, col2 = st.columns(2)
 
 with col1:
@@ -213,7 +253,12 @@ with col1:
     top_jobs.columns = ["job", "count"]
 
     fig = px.bar(top_jobs, x="count", y="job", orientation="h", text="count")
-    fig.update_layout(template="plotly_dark")
+    fig.update_layout(
+        template="plotly_white",
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+        font_color="#14532D",
+    )
     fig.update_traces(marker_color="#22C55E")
     st.plotly_chart(fig, use_container_width=True)
 
@@ -223,8 +268,13 @@ with col2:
     top_cities.columns = ["city", "count"]
 
     fig = px.bar(top_cities, x="count", y="city", orientation="h", text="count")
-    fig.update_layout(template="plotly_dark")
-    fig.update_traces(marker_color="#16A34A")
+    fig.update_layout(
+        template="plotly_white",
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+        font_color="#14532D",
+    )
+    fig.update_traces(marker_color="#15803D")
     st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
@@ -239,15 +289,29 @@ with col1:
     contract = df["contract"].value_counts().reset_index()
     contract.columns = ["type", "count"]
 
-    fig = px.pie(contract, names="type", values="count", hole=0.5)
-    fig.update_layout(template="plotly_dark")
+    fig = px.pie(
+        contract, names="type", values="count", hole=0.5,
+        color_discrete_sequence=GREEN_SCALE
+    )
+    fig.update_layout(
+        template="plotly_white",
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+        font_color="#14532D",
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 with col2:
     st.subheader("Salary Distribution")
 
     fig = px.histogram(df, x="Salary", nbins=25)
-    fig.update_layout(template="plotly_dark")
+    fig.update_layout(
+        template="plotly_white",
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+        font_color="#14532D",
+    )
+    fig.update_traces(marker_color="#4ADE80")
     st.plotly_chart(fig, use_container_width=True)
 
 st.divider()
@@ -261,14 +325,22 @@ tech = df.groupby("is_tech_job")["Salary"].mean().reset_index()
 tech["type"] = tech["is_tech_job"].map({0: "Non-Tech", 1: "Tech"})
 
 fig = px.bar(tech, x="type", y="Salary", text="Salary")
-fig.update_layout(template="plotly_dark")
-fig.update_traces(marker_color=["#EF4444", "#22C55E"])
+fig.update_layout(
+    template="plotly_white",
+    plot_bgcolor="white",
+    paper_bgcolor="white",
+    font_color="#14532D",
+)
+fig.update_traces(marker_color=["#94A3B8", "#22C55E"])
 
 st.plotly_chart(fig, use_container_width=True)
+
+st.divider()
 
 # =========================
 # DATA
 # =========================
+st.subheader("📋 Raw Data")
 st.dataframe(df, use_container_width=True)
 
 # =========================
