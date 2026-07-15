@@ -198,6 +198,7 @@ box-shadow: 0 4px 12px rgba(15,23,42,0.05);
 """, unsafe_allow_html=True)
 
 # =========================
+# =========================
 # HEADER (gradient banner with decorative shapes)
 # =========================
 header_html = (
@@ -209,7 +210,8 @@ header_html = (
     f'<img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" width="58" '
     f'style="border-radius:6px; box-shadow:0 4px 14px rgba(0,0,0,0.25); position:relative; z-index:1;">'
     f'<div style="position:relative; z-index:1;">'
-    f'<h1 style="color:#FFFFFF; margin:0; font-size:100px; font-weight:800; line-height:1.15;">Saudi Arabia Job Market Dashboard</h1>'
+    # أضفنا هنا !important لتكبير الخط الفعلي للعنوان بشكل إجباري
+    f'<h1 style="color:#FFFFFF !important; margin:0; font-size:56px !important; font-weight:800; line-height:1.15;">Saudi Arabia Job Market Dashboard</h1>' 
     f'<p style="color:rgba(255,255,255,0.85); margin:4px 0 0 0; font-size:14px; letter-spacing:0.5px;">'
     f'VISION 2030 &nbsp;&bull;&nbsp; JADARAT DATASET</p>'
     f'</div></div>'
