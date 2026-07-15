@@ -49,11 +49,11 @@ st.markdown("""
 <style>
 
 .main {
-    background: linear-gradient(180deg,#FFFFFF,#F0FDF4);
+    background: linear-gradient(180deg,#F8FAFC,#F1F5F9);
 }
 
 [data-testid="stAppViewContainer"] {
-    background: linear-gradient(180deg,#FFFFFF,#F0FDF4);
+    background: linear-gradient(180deg,#F8FAFC,#F1F5F9);
 }
 
 h1, h2, h3 {
