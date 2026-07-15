@@ -51,11 +51,11 @@ BORDER       = "#E4E8EC"
 TEXT_DARK    = "#1A2B32"
 TEXT_MUTED   = "#5C6B73"
 
-GRAD_START   = "#0B4F4A"   # deep teal-green
-GRAD_END     = "#1F9D7C"   # emerald
-ACCENT_1     = "#0F766E"   # teal
-ACCENT_2     = "#B08D57"   # muted gold (contrast accent, used sparingly)
-ACCENT_3     = "#2F855A"   # forest green
+GRAD_START   = "#0B4F4A"
+GRAD_END     = "#1F9D7C"
+ACCENT_1     = "#0F766E"
+ACCENT_2     = "#B08D57"
+ACCENT_3     = "#2F855A"
 
 GREEN_SCALE  = ["#0B4F4A", "#0F766E", "#1F9D7C", "#4FBF9F", "#9AD9C4", "#134E4A"]
 
@@ -86,20 +86,48 @@ color: {TEXT_DARK};
 font-size: 15px;
 }}
 
+/* ---- Sidebar redesign ---- */
 [data-testid="stSidebar"] {{
-background: {BG_CARD};
+background: linear-gradient(180deg, #FFFFFF 0%, #F7FAF9 100%);
 border-right: 1px solid {BORDER};
 }}
 
 [data-testid="stSidebar"] * {{
 color: {TEXT_DARK} !important;
+font-size: 13px !important;
 }}
 
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {{
+font-size: 15px !important;
+font-weight: 700 !important;
+color: {ACCENT_1} !important;
+}}
+
+[data-testid="stSidebar"] label p {{
+font-size: 12.5px !important;
+font-weight: 600 !important;
+color: {TEXT_MUTED} !important;
+text-transform: uppercase;
+letter-spacing: 0.4px;
+}}
+
+[data-testid="stSidebar"] [data-baseweb="select"] {{
+font-size: 13px !important;
+}}
+
+[data-testid="stSidebar"] [data-baseweb="radio"] label {{
+font-size: 13px !important;
+}}
+
+/* ---- KPI cards shadow ---- */
 [data-testid="stMetric"] {{
 background: {BG_CARD};
 border: 1px solid {BORDER};
 border-radius: 12px;
 padding: 14px;
+box-shadow: 0 6px 16px rgba(15,23,42,0.06);
 }}
 
 hr {{
@@ -109,6 +137,7 @@ border-color: {BORDER};
 div[data-testid="stAlert"] {{
 border-radius: 10px;
 font-size: 14px;
+box-shadow: 0 4px 12px rgba(15,23,42,0.05);
 }}
 </style>
 """, unsafe_allow_html=True)
@@ -118,7 +147,8 @@ font-size: 14px;
 # =========================
 header_html = (
     f'<div style="position:relative; overflow:hidden; background:linear-gradient(120deg,{GRAD_START},{GRAD_END}); '
-    f'padding:32px 30px; border-radius:18px; display:flex; align-items:center; gap:18px;">'
+    f'padding:32px 30px; border-radius:18px; display:flex; align-items:center; gap:18px; '
+    f'box-shadow:0 14px 30px rgba(11,79,74,0.25);">'
     f'<div style="position:absolute; top:-40px; right:-40px; width:160px; height:160px; border-radius:50%; background:rgba(255,255,255,0.08);"></div>'
     f'<div style="position:absolute; bottom:-60px; right:60px; width:120px; height:120px; border-radius:50%; background:rgba(255,255,255,0.06);"></div>'
     f'<img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" width="58" '
@@ -135,7 +165,12 @@ st.write("")
 # =========================
 # SIDEBAR FILTERS
 # =========================
-st.sidebar.header("🔎 Filters")
+sidebar_title_html = (
+    f'<div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">'
+    f'<div style="width:6px; height:18px; background:{ACCENT_1}; border-radius:3px;"></div>'
+    f'<span style="font-size:15px; font-weight:700; color:{TEXT_DARK};">Filters</span></div>'
+)
+st.sidebar.markdown(sidebar_title_html, unsafe_allow_html=True)
 
 if "city" in df.columns:
     cities = st.sidebar.multiselect("City", sorted(df["city"].dropna().unique()))
@@ -154,7 +189,7 @@ if tech_filter == "Tech Only":
 elif tech_filter == "Non-Tech Only":
     df = df[df["is_tech_job"] == 0]
 
-job_search = st.sidebar.text_input("🔎 Search Job Title")
+job_search = st.sidebar.text_input("Search Job Title")
 
 if job_search:
     df = df[df["job_title"].str.contains(job_search, case=False, na=False)]
@@ -164,16 +199,17 @@ if df.empty:
     st.stop()
 
 # =========================
-# KPI CARD (accent stripe + icon badge, flat left-aligned HTML)
+# KPI CARD (shadow + accent stripe + icon badge)
 # =========================
 def kpi_card(title, value, icon, accent):
     html = (
         f'<div style="background:{BG_CARD}; border:1px solid {BORDER}; border-radius:14px; '
-        f'padding:0; overflow:hidden;">'
+        f'overflow:hidden; box-shadow:0 10px 24px rgba(15,23,42,0.08); transition:all 0.2s ease;">'
         f'<div style="height:5px; background:{accent};"></div>'
         f'<div style="padding:18px; display:flex; align-items:center; gap:14px;">'
         f'<div style="width:44px; height:44px; border-radius:12px; background:{accent}22; '
-        f'display:flex; align-items:center; justify-content:center; font-size:22px;">{icon}</div>'
+        f'display:flex; align-items:center; justify-content:center; font-size:22px; '
+        f'box-shadow: inset 0 0 0 1px {accent}33;">{icon}</div>'
         f'<div>'
         f'<div style="color:{TEXT_MUTED}; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">{title}</div>'
         f'<div style="color:{TEXT_DARK}; font-size:24px; font-weight:800;">{value}</div>'
@@ -215,17 +251,22 @@ c.warning(f"💰 Avg Salary: {avg_salary:,.0f} SAR")
 st.divider()
 
 # =========================
-# CHARTS
+# CHARTS (explicit text/axis colors so nothing renders white-on-white)
 # =========================
 def style_fig(fig):
     fig.update_layout(
         template="plotly_white",
         plot_bgcolor=BG_CARD,
         paper_bgcolor=BG_CARD,
-        font_color=TEXT_DARK,
-        font_family=FONT_STACK,
+        font=dict(color=TEXT_DARK, family=FONT_STACK, size=13),
+        title_font=dict(color=TEXT_DARK),
+        legend=dict(font=dict(color=TEXT_DARK)),
+        xaxis=dict(color=TEXT_DARK, title_font=dict(color=TEXT_DARK), tickfont=dict(color=TEXT_DARK), gridcolor=BORDER),
+        yaxis=dict(color=TEXT_DARK, title_font=dict(color=TEXT_DARK), tickfont=dict(color=TEXT_DARK), gridcolor=BORDER),
         margin=dict(t=30, b=10, l=10, r=10),
     )
+    fig.update_traces(selector=dict(type="bar"), textfont=dict(color=TEXT_DARK), textposition="outside")
+    fig.update_traces(selector=dict(type="pie"), textfont=dict(color=TEXT_DARK))
     return fig
 
 col1, col2 = st.columns(2)
@@ -256,6 +297,7 @@ with col1:
     contract.columns = ["type", "count"]
     fig = px.pie(contract, names="type", values="count", hole=0.55,
                  color_discrete_sequence=GREEN_SCALE)
+    fig.update_traces(textfont=dict(color="#FFFFFF"))
     st.plotly_chart(style_fig(fig), use_container_width=True)
 
 with col2:
