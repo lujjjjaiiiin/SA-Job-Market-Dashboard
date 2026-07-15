@@ -72,7 +72,7 @@ font-family: {FONT_STACK} !important;
 }}
 
 [data-testid="stAppViewContainer"] {{
-background: {BG_PAGE};
+background: #FAFBFA;
 }}
 
 h1, h2, h3 {{
@@ -88,37 +88,82 @@ font-size: 15px;
 
 /* ---- Sidebar redesign ---- */
 [data-testid="stSidebar"] {{
-background: linear-gradient(180deg, #FFFFFF 0%, #F7FAF9 100%);
-border-right: 1px solid {BORDER};
+background-color: #EAF7F1;
+background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22180%22%20viewBox%3D%220%200%20400%20180%22%3E%3Cpath%20d%3D%22M0%2040%20C%20100%2090%2C%20300%200%2C%20400%2050%20L400%200%20L0%200%20Z%22%20fill%3D%22%23DFF3EC%22/%3E%3Cpath%20d%3D%22M0%2090%20C%20120%2040%2C%20280%20140%2C%20400%2090%20L400%20180%20L0%20180%20Z%22%20fill%3D%22%23CDEDE1%22/%3E%3Cpath%20d%3D%22M0%20130%20C%20100%20170%2C%20300%2090%2C%20400%20130%20L400%20180%20L0%20180%20Z%22%20fill%3D%22%23B9E4D3%22/%3E%3C/svg%3E");
+background-repeat: repeat-y;
+background-size: 100% 220px;
+border-right: 2px solid {ACCENT_1};
+padding-top: 6px;
 }}
 
 [data-testid="stSidebar"] * {{
 color: {TEXT_DARK} !important;
-font-size: 13px !important;
+font-size: 14px !important;
 }}
 
 [data-testid="stSidebar"] h1,
 [data-testid="stSidebar"] h2,
 [data-testid="stSidebar"] h3 {{
-font-size: 15px !important;
-font-weight: 700 !important;
+font-size: 16px !important;
+font-weight: 800 !important;
 color: {ACCENT_1} !important;
 }}
 
 [data-testid="stSidebar"] label p {{
-font-size: 12.5px !important;
-font-weight: 600 !important;
-color: {TEXT_MUTED} !important;
+font-size: 13px !important;
+font-weight: 700 !important;
+color: {TEXT_DARK} !important;
 text-transform: uppercase;
 letter-spacing: 0.4px;
+margin-bottom: 4px !important;
 }}
 
-[data-testid="stSidebar"] [data-baseweb="select"] {{
-font-size: 13px !important;
+/* Boxed dropdowns (multiselect) */
+[data-testid="stSidebar"] div[data-baseweb="select"] > div {{
+background: #FFFFFF !important;
+border: 1.5px solid {BORDER} !important;
+border-radius: 10px !important;
+box-shadow: 0 2px 6px rgba(15,23,42,0.05);
+min-height: 42px;
+}}
+
+[data-testid="stSidebar"] div[data-baseweb="select"]:focus-within > div {{
+border: 1.5px solid {ACCENT_1} !important;
+}}
+
+/* Boxed text input */
+[data-testid="stSidebar"] input[type="text"] {{
+background: #FFFFFF !important;
+border: 1.5px solid {BORDER} !important;
+border-radius: 10px !important;
+padding: 10px 12px !important;
+box-shadow: 0 2px 6px rgba(15,23,42,0.05);
+}}
+
+[data-testid="stSidebar"] input[type="text"]:focus {{
+border: 1.5px solid {ACCENT_1} !important;
+outline: none !important;
+}}
+
+/* Boxed radio group */
+[data-testid="stSidebar"] [role="radiogroup"] {{
+background: #FFFFFF;
+border: 1.5px solid {BORDER};
+border-radius: 10px;
+padding: 12px 14px;
+box-shadow: 0 2px 6px rgba(15,23,42,0.05);
 }}
 
 [data-testid="stSidebar"] [data-baseweb="radio"] label {{
-font-size: 13px !important;
+font-size: 13.5px !important;
+font-weight: 500 !important;
+}}
+
+/* Section spacing between widgets */
+[data-testid="stSidebar"] .stMultiSelect,
+[data-testid="stSidebar"] .stRadio,
+[data-testid="stSidebar"] .stTextInput {{
+margin-bottom: 14px;
 }}
 
 /* ---- KPI cards shadow ---- */
@@ -154,7 +199,7 @@ header_html = (
     f'<img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" width="58" '
     f'style="border-radius:6px; box-shadow:0 4px 14px rgba(0,0,0,0.25); position:relative; z-index:1;">'
     f'<div style="position:relative; z-index:1;">'
-    f'<h1 style="color:#FFFFFF; margin:0; font-size:28px; font-weight:800;">Saudi Arabia Job Market Dashboard</h1>'
+    f'<h1 style="color:#FFFFFF; margin:0; font-size:38px; font-weight:800; line-height:1.15;">Saudi Arabia Job Market Dashboard</h1>'
     f'<p style="color:rgba(255,255,255,0.85); margin:4px 0 0 0; font-size:14px; letter-spacing:0.5px;">'
     f'VISION 2030 &nbsp;&bull;&nbsp; JADARAT DATASET</p>'
     f'</div></div>'
