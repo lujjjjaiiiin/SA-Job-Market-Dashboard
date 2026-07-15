@@ -66,9 +66,16 @@ FONT_STACK = "'Segoe UI','Helvetica Neue',Arial,sans-serif"
 # =========================
 st.markdown(f"""
 <style>
-html, body, [class*="css"], [data-testid="stMarkdownContainer"] p {{
-font-family: {FONT_STACK} !important;
+html, body {{
+font-family: {FONT_STACK};
 -webkit-font-smoothing: antialiased;
+}}
+
+[data-testid="stMarkdownContainer"] p,
+[data-testid="stMarkdownContainer"] li,
+[data-testid="stMetricLabel"],
+[data-testid="stMetricValue"] {{
+font-family: {FONT_STACK};
 }}
 
 [data-testid="stAppViewContainer"] {{
@@ -96,9 +103,12 @@ border-right: 2px solid {ACCENT_1};
 padding-top: 6px;
 }}
 
-[data-testid="stSidebar"] * {{
-color: {TEXT_DARK} !important;
-font-size: 14px !important;
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] li {{
+color: {TEXT_DARK};
+font-size: 14px;
 }}
 
 [data-testid="stSidebar"] h1,
