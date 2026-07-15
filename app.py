@@ -43,26 +43,32 @@ df["is_tech_job"] = (
 )
 
 # =========================
-# COLOR PALETTE (professional, muted, eye-friendly)
+# COLOR PALETTE
 # =========================
-BG_PAGE      = "#F5F6F8"   # light grey page background
-BG_CARD      = "#FFFFFF"   # white cards
-BORDER       = "#E2E8F0"   # soft grey border
-TEXT_DARK    = "#1E293B"   # dark slate for body/headings
-TEXT_MUTED   = "#64748B"   # muted grey-blue for labels
-GREEN_MAIN   = "#0F766E"   # muted teal-green (headings/accent)
-GREEN_SOFT   = "#0D9488"   # slightly lighter accent
-GREEN_SCALE  = ["#0F766E", "#14B8A6", "#5EEAD4", "#99F6E4", "#0D9488", "#134E4A"]
+BG_PAGE      = "#F4F6F8"
+BG_CARD      = "#FFFFFF"
+BORDER       = "#E4E8EC"
+TEXT_DARK    = "#1A2B32"
+TEXT_MUTED   = "#5C6B73"
+
+GRAD_START   = "#0B4F4A"   # deep teal-green
+GRAD_END     = "#1F9D7C"   # emerald
+ACCENT_1     = "#0F766E"   # teal
+ACCENT_2     = "#B08D57"   # muted gold (contrast accent, used sparingly)
+ACCENT_3     = "#2F855A"   # forest green
+
+GREEN_SCALE  = ["#0B4F4A", "#0F766E", "#1F9D7C", "#4FBF9F", "#9AD9C4", "#134E4A"]
+
+FONT_STACK = "'Segoe UI','Helvetica Neue',Arial,sans-serif"
 
 # =========================
 # GLOBAL STYLE
 # =========================
 st.markdown(f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-html, body, [class*="css"] {{
-font-family: 'Inter', 'Segoe UI', sans-serif;
+html, body, [class*="css"], [data-testid="stMarkdownContainer"] p {{
+font-family: {FONT_STACK} !important;
+-webkit-font-smoothing: antialiased;
 }}
 
 [data-testid="stAppViewContainer"] {{
@@ -70,12 +76,14 @@ background: {BG_PAGE};
 }}
 
 h1, h2, h3 {{
-color: {GREEN_MAIN};
+color: {TEXT_DARK};
 font-weight: 700;
+letter-spacing: -0.3px;
 }}
 
-p, span, label, div {{
+p, span, label {{
 color: {TEXT_DARK};
+font-size: 15px;
 }}
 
 [data-testid="stSidebar"] {{
@@ -94,30 +102,31 @@ border-radius: 12px;
 padding: 14px;
 }}
 
-[data-testid="stMetricValue"] {{
-color: {GREEN_MAIN};
-}}
-
 hr {{
 border-color: {BORDER};
 }}
 
 div[data-testid="stAlert"] {{
 border-radius: 10px;
+font-size: 14px;
 }}
 </style>
 """, unsafe_allow_html=True)
 
 # =========================
-# HEADER
+# HEADER (gradient banner with decorative shapes)
 # =========================
 header_html = (
-    f'<div style="background:{BG_CARD}; padding:22px; border-radius:14px; '
-    f'display:flex; align-items:center; gap:15px; border:1px solid {BORDER};">'
-    f'<img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" width="55">'
-    f'<div>'
-    f'<h1 style="color:{GREEN_MAIN}; margin:0; font-size:26px;">Saudi Arabia Job Market Dashboard</h1>'
-    f'<p style="color:{TEXT_MUTED}; margin:0; font-size:14px;">Vision 2030 &bull; Jadarat Dataset</p>'
+    f'<div style="position:relative; overflow:hidden; background:linear-gradient(120deg,{GRAD_START},{GRAD_END}); '
+    f'padding:32px 30px; border-radius:18px; display:flex; align-items:center; gap:18px;">'
+    f'<div style="position:absolute; top:-40px; right:-40px; width:160px; height:160px; border-radius:50%; background:rgba(255,255,255,0.08);"></div>'
+    f'<div style="position:absolute; bottom:-60px; right:60px; width:120px; height:120px; border-radius:50%; background:rgba(255,255,255,0.06);"></div>'
+    f'<img src="https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" width="58" '
+    f'style="border-radius:6px; box-shadow:0 4px 14px rgba(0,0,0,0.25); position:relative; z-index:1;">'
+    f'<div style="position:relative; z-index:1;">'
+    f'<h1 style="color:#FFFFFF; margin:0; font-size:28px; font-weight:800;">Saudi Arabia Job Market Dashboard</h1>'
+    f'<p style="color:rgba(255,255,255,0.85); margin:4px 0 0 0; font-size:14px; letter-spacing:0.5px;">'
+    f'VISION 2030 &nbsp;&bull;&nbsp; JADARAT DATASET</p>'
     f'</div></div>'
 )
 st.markdown(header_html, unsafe_allow_html=True)
@@ -155,16 +164,20 @@ if df.empty:
     st.stop()
 
 # =========================
-# KPI CARD (no leading indentation -> avoids markdown code-block bug)
+# KPI CARD (accent stripe + icon badge, flat left-aligned HTML)
 # =========================
-def kpi_card(title, value, icon):
+def kpi_card(title, value, icon, accent):
     html = (
-        f'<div style="background:{BG_CARD}; border:1px solid {BORDER}; padding:18px; '
-        f'border-radius:14px; text-align:center;">'
-        f'<div style="font-size:26px;">{icon}</div>'
-        f'<h2 style="color:{GREEN_MAIN}; margin:6px 0; font-size:22px;">{value}</h2>'
-        f'<p style="color:{TEXT_MUTED}; margin:0; font-size:13px;">{title}</p>'
-        f'</div>'
+        f'<div style="background:{BG_CARD}; border:1px solid {BORDER}; border-radius:14px; '
+        f'padding:0; overflow:hidden;">'
+        f'<div style="height:5px; background:{accent};"></div>'
+        f'<div style="padding:18px; display:flex; align-items:center; gap:14px;">'
+        f'<div style="width:44px; height:44px; border-radius:12px; background:{accent}22; '
+        f'display:flex; align-items:center; justify-content:center; font-size:22px;">{icon}</div>'
+        f'<div>'
+        f'<div style="color:{TEXT_MUTED}; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">{title}</div>'
+        f'<div style="color:{TEXT_DARK}; font-size:24px; font-weight:800;">{value}</div>'
+        f'</div></div></div>'
     )
     st.markdown(html, unsafe_allow_html=True)
 
@@ -179,11 +192,11 @@ comp = df["comp_name"].nunique() if "comp_name" in df.columns else 0
 
 c1, c2, c3 = st.columns(3)
 with c1:
-    kpi_card("Total Jobs", f"{total_jobs:,}", "📊")
+    kpi_card("Total Jobs", f"{total_jobs:,}", "📊", ACCENT_1)
 with c2:
-    kpi_card("Companies", f"{comp:,}", "🏢")
+    kpi_card("Companies", f"{comp:,}", "🏢", ACCENT_3)
 with c3:
-    kpi_card("Tech Jobs", f"{int(tech_jobs):,}", "💻")
+    kpi_card("Tech Jobs", f"{int(tech_jobs):,}", "💻", ACCENT_2)
 
 st.divider()
 
@@ -210,6 +223,7 @@ def style_fig(fig):
         plot_bgcolor=BG_CARD,
         paper_bgcolor=BG_CARD,
         font_color=TEXT_DARK,
+        font_family=FONT_STACK,
         margin=dict(t=30, b=10, l=10, r=10),
     )
     return fig
@@ -221,7 +235,7 @@ with col1:
     top_jobs = df["job_title"].value_counts().head(10).reset_index()
     top_jobs.columns = ["job", "count"]
     fig = px.bar(top_jobs, x="count", y="job", orientation="h", text="count")
-    fig.update_traces(marker_color=GREEN_MAIN)
+    fig.update_traces(marker_color=ACCENT_1)
     st.plotly_chart(style_fig(fig), use_container_width=True)
 
 with col2:
@@ -229,7 +243,7 @@ with col2:
     top_cities = df["city"].value_counts().head(10).reset_index()
     top_cities.columns = ["city", "count"]
     fig = px.bar(top_cities, x="count", y="city", orientation="h", text="count")
-    fig.update_traces(marker_color=GREEN_SOFT)
+    fig.update_traces(marker_color=ACCENT_3)
     st.plotly_chart(style_fig(fig), use_container_width=True)
 
 st.divider()
@@ -240,14 +254,14 @@ with col1:
     st.subheader("Contract Type")
     contract = df["contract"].value_counts().reset_index()
     contract.columns = ["type", "count"]
-    fig = px.pie(contract, names="type", values="count", hole=0.5,
+    fig = px.pie(contract, names="type", values="count", hole=0.55,
                  color_discrete_sequence=GREEN_SCALE)
     st.plotly_chart(style_fig(fig), use_container_width=True)
 
 with col2:
     st.subheader("Salary Distribution")
     fig = px.histogram(df, x="Salary", nbins=25)
-    fig.update_traces(marker_color=GREEN_SOFT)
+    fig.update_traces(marker_color=ACCENT_1)
     st.plotly_chart(style_fig(fig), use_container_width=True)
 
 st.divider()
@@ -256,7 +270,7 @@ st.subheader("Tech vs Non-Tech")
 tech = df.groupby("is_tech_job")["Salary"].mean().reset_index()
 tech["type"] = tech["is_tech_job"].map({0: "Non-Tech", 1: "Tech"})
 fig = px.bar(tech, x="type", y="Salary", text="Salary")
-fig.update_traces(marker_color=[TEXT_MUTED, GREEN_MAIN])
+fig.update_traces(marker_color=[ACCENT_2, ACCENT_1])
 st.plotly_chart(style_fig(fig), use_container_width=True)
 
 st.divider()
